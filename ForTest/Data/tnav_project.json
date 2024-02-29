@@ -1,0 +1,80 @@
+{
+  "start_date": "2024-01-01",
+  "step_size_in_days": "30",
+  "boreholes": [
+    {
+      "name": "WELL_1",
+      "trajectory": [
+        {
+          "order_number": 1,
+          "x": 2800,
+          "y": -2100,
+          "z": 0
+        },
+        {
+          "order_number": 2,
+          "x": 3000,
+          "y": -3000,
+          "z": 1500
+        },
+        {
+          "order_number": 3,
+          "x": 2500,
+          "y": -2500,
+          "z": 1450
+        },
+        {
+          "order_number": 4,
+          "x": 3000,
+          "y": -2300,
+          "z": 1400
+        }
+      ]
+    }
+  ],
+  "schedule": [
+    {
+      "step": 1,
+      "name": "add_perforation",
+      "params": {
+        "borehole_name": "WELL_1",
+        "perforations": [
+          {
+            "from_md": 1100.0,
+            "to_md": 1105.0
+          },
+          {
+            "from_md": 1115.0,
+            "to_md": 1150.0
+          }
+        ]
+      }
+    },
+    {
+      "step": 2,
+      "name": "add_perforation",
+      "params": {
+        "borehole_name": "WELL_1",
+        "perforations": [
+          {
+            "from_md": 1200.0,
+            "to_md": 1300.0
+          },
+          {
+            "from_md": 1305.0,
+            "to_md": 1310.0
+          },
+          {
+            "from_md": 1500.0,
+            "to_md": 3000.0
+          }
+        ]
+      }
+    },
+    {
+      "step": 5,
+      "name": "last_day",
+      "params": {}
+    }
+  ]
+}
