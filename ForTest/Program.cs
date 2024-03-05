@@ -1,4 +1,9 @@
-﻿using tNavigatorApi;
+﻿using System.Security.AccessControl;
+using System.Text.Json;
+using Microsoft.VisualBasic.CompilerServices;
+using tNavigatorLauncher;
+using tNavigatorModels;
+using tNavigatorModels.Schedule;
 
 namespace ForTest
 {
@@ -6,37 +11,42 @@ namespace ForTest
     {
         static void Main(string[] args)
         {
-            //var projectDataFile = "\"Project\\Original_project\\BLACK_OIL_DEMO.DATA\"";
+            string projectFile = "tNavigatorProject.json",
+                projectDir = "C:\\Users\\KosachevIV\\Desktop\\tNavTests\\modelLaunch",
+                tNavExe = "C:\\Program Files\\RFD\\tNavigator\\23.4\\tNavigator-con.exe";
 
-            var projectDir = "C:\\tNavProjects\\model";
-            var launcher = new Launcher(new LauncherConfig(
-                "C:\\Program Files\\RFD\\tNavigator\\23.1\\tNavigator-con.exe",
-                $"{projectDir}\\result.data"));
+            InitFile(projectFile);
+            var launcher = new Launcher(new LauncherConfig(tNavExe, projectDir));
 
-            //string fileText = File.ReadAllText("tNavigatorProject.json");
+            string fileText = File.ReadAllText(projectFile);
+            var tNavProject = JsonSerializer.Deserialize<TNavigatorProject>(fileText)!;
 
-            //var tNavProject = JsonSerializer.Deserialize<tNavigatorModels.TNavigatorProject>(fileText)!;
+            launcher.Start(tNavProject);
 
-            //launcher.TNavigatorRun();
+            var calculationResult = launcher.Start(tNavProject);
 
-            var files = new []
+            var calculationResultText = JsonSerializer.Serialize(calculationResult);
+
+            File.WriteAllText(@"C:\Users\KosachevIV\Source\Repos\tNavigatorComputerNetwork\ForTest",
+                calculationResultText);
+        }
+
+        private static void InitFile(string projectPath)
+        {
+            var boreholes = new List<Borehole>();
+            var coordinates = new CoordinatePoint[]
             {
-                Directory.GetFiles(projectDir, "*.UNSMRY").First(),
-                Directory.GetFiles(projectDir, "*.SMSPEC").First()
+                new(1, 2, 100, 1),
+                new(1, 2, 500, 2),
             };
 
-            foreach (string file in files)
-            {
-                Console.WriteLine(file);
-            }
+            boreholes.Add(new Borehole("Well #1",
+                coordinates, new DateTime(2023, 1, 1)));
 
 
-            //var calculationResult = launcher.Start(tNavProject);
-
-            //var calculationResultText = JsonSerializer.Serialize(calculationResult);
-
-            //File.WriteAllText(@"C:\Users\KosachevIV\Source\Repos\tNavigatorComputerNetwork\ForTest",
-            //    calculationResultText);
+            var project = new TNavigatorProject(boreholes.ToArray(), new Schedule(), new Team("BestTeam"));
+            var projectData = JsonSerializer.Serialize(project);
+            File.WriteAllText(projectPath, projectData);
         }
     }
 }
