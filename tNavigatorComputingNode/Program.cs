@@ -1,7 +1,7 @@
 ﻿using MessageBroker;
 using System.Text;
 using System.Text.Json.Serialization;
-using tNavigatorApi;
+using tNavigatorLauncher;
 using tNavigatorModels;
 using Utils;
 
@@ -41,14 +41,19 @@ internal class Program
             try
             {
                 Console.WriteLine("Calculate");
-                projectSourceUrl = JsonUtil.Deserialize<TNvagigaorModel>(Encoding.UTF8.GetString(message))!.Url;
+                projectSourceUrl = JsonUtil.Deserialize<TNavigatorModel>(Encoding.UTF8.GetString(message))!.Url;
 
                 var calculateProjectDir = Path.Combine(config.ProjectPath, Path.GetFileName(projectSourceUrl));
                 Dir.CopyDirectory(projectSourceUrl, calculateProjectDir);
 
                 var projectFile = Directory.GetFiles(calculateProjectDir, "*.data").FirstOrDefault();
                 if (projectFile is null)
-                    throw new ArgumentException($"В директории {projectSourceUrl} не найден файл с расширением *.data");
+                {
+                    var dirFiles = string.Join(", ", Directory.GetFiles(projectSourceUrl));
+                    var dirs= string.Join(", ", Directory.GetDirectories(projectSourceUrl));
+                    throw new ArgumentException(
+                        $"A file with the extension *.data was not found in the {projectSourceUrl} directory. {dirFiles}. {dirs}");
+                }
 
                 var launcher = new Launcher(new LauncherConfig(config.TNavPath, projectFile));
                 launcher.TNavigatorRun();
@@ -68,7 +73,7 @@ internal class Program
                 errorMessage = e.Message + $"{e}";
             }
 
-            var resultMessage = JsonUtil.Serialize(new TNvagigaorResult(projectSourceUrl, errorMessage));
+            var resultMessage = JsonUtil.Serialize(new TNavigatorResult(projectSourceUrl, errorMessage));
             brokerForResult.PublishMessage(resultMessage).Wait();
         }
 

@@ -1,8 +1,8 @@
 ﻿namespace tNavigatorModels
 {
     public record Team(string Name);
-    public record TNvagigaorModel(string Url);
-    public record TNvagigaorResult(
+    public record TNavigatorModel(string Url);
+    public record TNavigatorResult(
         string ProjectDirPath,
         string? Message);
     public record TNavigatorProject(

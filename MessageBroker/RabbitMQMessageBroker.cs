@@ -44,8 +44,8 @@ public class RabbitMQMessageBroker(
     public CancellationTokenSource ConsumeCancelTokenSource { get; set; } = new();
 
 
-    public async Task PublishMessage(string message) =>
-        PublishMessage(Encoding.ASCII.GetBytes(message));
+    public Task PublishMessage(string message) =>
+        Task.FromResult(PublishMessage(Encoding.ASCII.GetBytes(message)));
 
     public void PurgeQueue()
     {

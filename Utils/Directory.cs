@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics;
+using System.Security.AccessControl;
+using System.Security.Principal;
 
 namespace Utils
 {
@@ -41,18 +43,12 @@ namespace Utils
             Task.WhenAll(tasks.ToArray());
         }
 
-        /// <summary>
-        /// var directory = @"C:\Test\d";
-        /// Console.WriteLine(System.Net.Dns.GetHostName());
-        /// MakeDirPublic(directory);
-        /// </summary>
-        public static void MakeDirPublic(string directory)
+
+        public static void StartProcess(string arguments)
         {
             try
             {
-                var dirName = directory.Split(@"\").Last();
                 var exeFile = "powershell.exe";
-                var arguments = $"New-SmbShare -Name {dirName} -Path {directory} –FullAccess все";
                 var processStartInfo = new ProcessStartInfo(exeFile, arguments);
                 processStartInfo.RedirectStandardOutput = true;
                 processStartInfo.UseShellExecute = false;
@@ -79,6 +75,35 @@ namespace Utils
             {
                 Console.WriteLine("An error occurred: " + ex.Message);
             }
+        }
+
+        public static void MakeDirUnPublic(string directory)
+        {
+            var dirName = directory.Split(@"\").Last();
+            var arguments = $"Remove-SmbShare -Name {dirName} -force";
+            StartProcess(arguments);
+        }
+
+
+        /// <summary>
+        /// var directory = @"C:\Test\d";
+        /// Console.WriteLine(System.Net.Dns.GetHostName());
+        /// MakeDirPublic(directory);
+        /// </summary>
+        public static void MakeDirPublic(string directory)
+        {
+            var rootDir = Path.GetDirectoryName(directory);
+            string script1 = "";
+            script1 += $"$NewAcl = Get-Acl -Path \"{rootDir}\"";
+            script1 += "\n$fileSystemAccessRuleArgumentList = 'Все', 'FullControl', 'ContainerInherit,ObjectInherit', 'None', 'Allow'";
+            script1 += "\n$fileSystemAccessRule = New-Object -TypeName System.Security.AccessControl.FileSystemAccessRule -ArgumentList $fileSystemAccessRuleArgumentList";
+            script1 += "\n$NewAcl.SetAccessRule($fileSystemAccessRule)";
+            script1 += $"\nSet-Acl -Path \"{rootDir}\" -AclObject $NewAcl";
+            StartProcess(script1);
+            
+            var dirName = directory.Split(@"\").Last();
+            var arguments = $"New-SmbShare -Name {dirName} -Path {directory} –FullAccess все";
+            StartProcess(arguments);
         }
     }
 }

@@ -18,8 +18,7 @@ namespace tNavigatorDistributionNode
 
         static async Task Main(string[] args)
         {
-            var sw = new Stopwatch();
-            sw.Start();
+            var sw = Stopwatch.StartNew();
 
             var hostName = Dns.GetHostName();
             NodeConfig config = NodeConfig.LoadConfig("config.json");
@@ -29,11 +28,11 @@ namespace tNavigatorDistributionNode
             IMessageBroker messageBroker = GetBroker(config, ModelCalculation),
                 resultBroker = GetBroker(config, ModelResult);
 
-            Console.WriteLine($"Count active node: {messageBroker.GetConsumersCount()}");
+            Console.WriteLine($"Active node count: {messageBroker.GetConsumersCount()}");
 
             void ReceivedEventHandler(byte[] message)
             {
-                var result = JsonUtil.Deserialize<TNvagigaorResult>(Encoding.UTF8.GetString(message));
+                var result = JsonUtil.Deserialize<TNavigatorResult>(Encoding.UTF8.GetString(message));
                 if (result.Message is not null)
                 {
                     Console.WriteLine(result.Message);
@@ -47,8 +46,8 @@ namespace tNavigatorDistributionNode
 
             resultBroker.ConsumeMessageAsync(ReceivedEventHandler);
 
-            var projectDirPath = Console.ReadLine();
-            while (Directory.Exists(projectDirPath))
+            string projectDirPath;
+            while (Directory.Exists(projectDirPath = GetNextDir()))
             {
                 var sharedDir = Directory.GetParent(projectDirPath);
 
@@ -57,20 +56,29 @@ namespace tNavigatorDistributionNode
 
                 var targetDirNetworkPath = $"//{hostName}/{sharedDir.Name}/{Path.GetFileName(projectDirPath)}";
 
-                var message = JsonUtil.Serialize(new TNvagigaorModel(targetDirNetworkPath));
+                var message = JsonUtil.Serialize(new TNavigatorModel(targetDirNetworkPath));
                 await messageBroker.PublishMessage(message);
 
                 projectDirs.Add(targetDirNetworkPath);
-                projectDirPath = Console.ReadLine();
             }
 
             while (projectDirs.Any())
             {
-                Thread.Sleep(100);
+                Thread.Sleep(300);
             }
 
             Console.WriteLine($"Finish: {sw.Elapsed}");
             resultBroker.PurgeQueue();
+        }
+
+        public static string? GetNextDir()
+        {
+            var dir = Console.ReadLine();
+            if(Directory.Exists(dir) is false)
+            {
+                Console.WriteLine($"Directory '{dir}' is not exist.");
+            }
+            return dir;
         }
     }
 
