@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using tNavigatorLauncher;
 using tNavigatorModels;
+using tNavigatorModels.Project;
 using Utils;
 
 namespace tNavigatorComputingNode;
@@ -41,7 +42,7 @@ internal class Program
             try
             {
                 Console.WriteLine("Calculate");
-                projectSourceUrl = JsonUtil.Deserialize<TNavigatorModel>(Encoding.UTF8.GetString(message))!.Url;
+                projectSourceUrl = JsonUtil.Deserialize<ConsumeModel>(Encoding.UTF8.GetString(message))!.Url;
 
                 var calculateProjectDir = Path.Combine(config.ProjectPath, Path.GetFileName(projectSourceUrl));
                 Dir.CopyDirectory(projectSourceUrl, calculateProjectDir);
@@ -73,7 +74,7 @@ internal class Program
                 errorMessage = e.Message + $"{e}";
             }
 
-            var resultMessage = JsonUtil.Serialize(new TNavigatorResult(projectSourceUrl, errorMessage));
+            var resultMessage = JsonUtil.Serialize(new Result(projectSourceUrl, errorMessage));
             brokerForResult.PublishMessage(resultMessage).Wait();
         }
 

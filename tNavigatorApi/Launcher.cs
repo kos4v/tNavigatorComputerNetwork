@@ -1,17 +1,24 @@
-﻿using System.Diagnostics;
-using System.Drawing;
+﻿using System.Data;
+using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using tNavigatorModels;
+using tNavigatorModels.Project;
+using tNavigatorModels.Project.Schedule;
+using tNavigatorModels.Result;
+using Utils;
+using Result = tNavigatorModels.Project.Result;
 
 namespace tNavigatorLauncher
 {
     public record AxisSize(int Size, int Min, int Max)
     {
-        public double StepSize => (double)(Max - Min) / Size;
+        public int StepSize => (Max - Min) / Size;
+        public int Convert(int v) => Min + v * StepSize;
     }
 
     public record ModelSize(AxisSize X, AxisSize Y);
-        
+
     public record LauncherConfig(
         string TNavigatorConsoleExePath,
         string ProjectDir
@@ -22,71 +29,41 @@ namespace tNavigatorLauncher
         public string WellTrackPath => Directory.GetFiles(IncludeDir, "*WELLTRACK.inc").First();
         public string GrdeclPath => Directory.GetFiles(IncludeDir, "*.grdecl").First();
         public string GridPath => Directory.GetFiles(IncludeDir, "*GRID.inc").First();
+        public string SchedulePath => Directory.GetFiles(IncludeDir, "*Schedule.inc").First();
+        public string ScriptDirPath => Path.Combine(IncludeDir, "PythonActions");
+        public string ResultDirPath => Path.Combine(ProjectDir, "ResultData");
+
 
         public ModelSize GetModelSize()
         {
-            var lines = File.ReadAllLines(GrdeclPath);
-            var isCoord = false;
-            double maxX = 0,
-                maxY = 0,
-                minX = int.MaxValue,
-                minY = int.MaxValue;
-
-            foreach (var line in lines)
-            {
-                if (line == "COORD")
-                {
-                    isCoord = true;
-                    continue;
-                }
-
-                if (!isCoord)
-                {
-                    continue;
-                }
-
-                var values = line.Split(" ")
-                    .Where(v => v != "");
-
-                if (values.Last() == "/")
-                {
-                    isCoord = false;
-                    values = values.SkipLast(1);
-                }
-
-                var valuesDouble = values
-                    .Select(c =>
-                        Convert.ToDouble(c.Replace('.', ',')))
-                    .ToArray();
-
-                maxX = new[] { valuesDouble[0], valuesDouble[3], maxX }.Max();
-                maxY = new[] { valuesDouble[1], valuesDouble[4], maxY }.Max();
-                minX = new[] { valuesDouble[0], valuesDouble[3], minX }.Min();
-                minY = new[] { valuesDouble[1], valuesDouble[4], minY }.Min();
-
-                if (isCoord is false)
-                {
-                    break;
-                }
-            }
-
             var gridLines = File.ReadAllLines(GridPath).ToList();
-            var targetLine = "";
-            for (int i = 0; i < gridLines.Count; i++)
+            var gridValues = TrimSplit(gridLines[gridLines.IndexOf("SPECGRID") + 1]);
+
+            var result = new ModelSize(new AxisSize(Convert.ToInt16(gridValues[0]), int.MaxValue, 0),
+                new AxisSize(Convert.ToInt16(gridValues[1]), int.MaxValue, 0));
+
+            var lines = File.ReadAllLines(GrdeclPath).ToList();
+            foreach (var line in lines.Skip(lines.IndexOf("COORD") + 1))
             {
-                if (gridLines[i] == "SPECGRID")
+                var valuesDouble = TrimSplit(line.Replace('.', ',')).Select(Convert.ToDouble).ToArray();
+
+                result = new ModelSize(result.X with
                 {
-                    targetLine = gridLines[i + 1];
-                }
+                    Min = (int)new[] { valuesDouble[0], valuesDouble[3], result.X.Min }.Min(),
+                    Max = (int)new[] { valuesDouble[0], valuesDouble[3], result.X.Max }.Max()
+                }, result.Y with
+                {
+                    Min = (int)new[] { valuesDouble[1], valuesDouble[4], result.Y.Min }.Min(),
+                    Max = (int)new[] { valuesDouble[1], valuesDouble[4], result.Y.Max }.Max()
+                });
+
+                if (line.Contains('/'))
+                    break;
             }
 
-            var gridValues = targetLine.Split(' ').Where(v => v != "").ToArray();
+            return result;
 
-            new AxisSize(Convert.ToInt16(gridValues[0]), (int)minX, (int)maxX);
-            return new ModelSize(
-                new AxisSize(Convert.ToInt16(gridValues[0]), (int)minX, (int)maxX),
-                new AxisSize(Convert.ToInt16(gridValues[1]), (int)minY, (int)maxY)
-                );
+            string[] TrimSplit(string l) => l.Split(' ').Where(v => v is not ("" or "/")).ToArray();
         }
     }
 
@@ -95,39 +72,122 @@ namespace tNavigatorLauncher
         public string? Output { get; set; }
         public ModelSize Size { get; set; } = launcherConfig.GetModelSize();
 
-        /// <returns>Project directory</returns>
-        public void CreateProjectFiles(TNavigatorProject project)
+        public void CreateProjectFiles(Project project)
         {
             InitBoreholes(project);
-            //InitEvents(project);
+            InitSchedule(project);
         }
 
-        public void InitEvents(TNavigatorProject project)
+        public void InitSchedule(Project project)
         {
-            foreach (var scheduleEvent in project.Schedule.Events)
+            var schedule_inc = new List<string>
             {
-                Console.WriteLine(scheduleEvent.EventName);
+                "RPTSCHED",
+                "'WELLS=2' 'SUMMARY=2' 'fip=3' 'RESTART=1' 'WELSPECS' 'CPU=2' /",
+                "",
+                "INCLUDE",
+                $"'INCLUDE/{Path.GetFileName(launcherConfig.WellTrackPath)}' /",
+                "",
+            };
+
+            schedule_inc.Add("WELSPECS");
+            schedule_inc.AddRange(project.Boreholes.Select(borehole => $"   '{borehole.Name}'   1*  2*  /"));
+            schedule_inc.Add("/\n");
+
+            schedule_inc.Add(Schedule.ScriptsTNavString(launcherConfig.ScriptDirPath, launcherConfig.ResultDirPath));
+            schedule_inc.Add("/\n");
+
+            schedule_inc.Add("COMPDATMD");
+            foreach (var borehole in project.Boreholes)
+            {
+                var perforations =
+                    project.Schedule.Events.AddPerforationEvents.Where(p => p.BoreholeName == borehole.Name);
+                schedule_inc.AddRange(perforations.Select(perforation => perforation.COMPDATMDString()));
             }
+
+            schedule_inc.Add("/\n");
+
+            // В *.data указана дата старта её нельзя указывать в DATES
+            var all_envents = project.Schedule.Events.GetAllEvents();
+            for (int i = 1; i < project.Schedule.CurrentStep; i++)
+            {
+                var todayEvents = all_envents.Where(e => e.Step == i)
+                    .ToArray();
+                schedule_inc.Add(Schedule.DateTNavString(i));
+                if (todayEvents.Any() is false)
+                {
+                    continue;
+                }
+
+                foreach (var grouping in todayEvents.GroupBy(e => e.EventTNavName))
+                {
+                    schedule_inc.Add(grouping.First().EventTNavName);
+                    schedule_inc.AddRange(
+                        grouping.Select(baseEvent => baseEvent.TNavString()).Concat(new[] { "/", "" }));
+                }
+            }
+
+            schedule_inc.Add(Schedule.DateTNavString(project.Schedule.CurrentStep));
+
+            schedule_inc.Add("END");
+
+            File.WriteAllText(launcherConfig.SchedulePath, string.Join('\n', schedule_inc));
         }
 
-        public void InitBoreholes(TNavigatorProject project)
+
+        public void InitBoreholes(Project project)
         {
             var welltrack_inc = new List<string>();
 
             foreach (Borehole borehole in project.Boreholes)
             {
                 welltrack_inc.Add($"WELLTRACK '{borehole.Name}'");
-                welltrack_inc.AddRange(borehole.Coordinates.Select(point => $"{point.X} {point.Y} {point.Z} 1*"));
+
+                welltrack_inc.AddRange(borehole.Coordinates.OrderBy(c => c.OrderNumber)
+                    .Select(point => $"{Size.X.Convert(point.X)} {Size.Y.Convert(point.Y)} {point.Z} 1*"));
+
                 welltrack_inc[^1] = welltrack_inc.Last() + " /";
+                welltrack_inc.Add("");
             }
 
             File.WriteAllText(launcherConfig.WellTrackPath, string.Join('\n', welltrack_inc));
         }
 
-
-        public CalculationResult ReadCalculationResult()
+        public tNavigatorModels.Result.Result ReadCalculationResult()
         {
-            throw new NotImplementedException();
+            var debitDir = Path.Combine(launcherConfig.ResultDirPath, Schedule.DebitDir);
+            var debitFiles = Directory.GetFiles(debitDir);
+            
+            var boreholeDebitList = new List<ResultBorehole>();
+
+            foreach (string debitFile in debitFiles)
+            {
+                var boreholeDebit = new ResultBoreholeDebit();
+                var dt = Converter.ConvertCSVtoDataTable(debitFile);
+
+                var date = dt.Rows[0][1].ToString()!.Split('-').Select(v => Convert.ToInt16(v)).ToList();
+                var data = new DateOnly(date[0], date[1], date[2]);
+
+                var wellName = dt.Rows[0][2].ToString()!.Split(':').First();
+
+                foreach (DataRow dataRow in dt.Rows)
+                {
+                    var coordinate = dataRow[2].ToString()!.Split(':').Last().Split(',').Last();
+                    var zCell = Convert.ToInt16(string.Join("", coordinate.Where(char.IsDigit)));
+                    var value = Convert.ToDouble(((string)dataRow[3]).Replace('.', ','));
+                }
+
+                
+            }
+
+            boreholeDebitList.Add();
+
+            var result = new tNavigatorModels.Result.Result()
+            {
+                BoreholeResults = boreholeDebitList.ToArray()
+            };
+
+            return result;
         }
 
         /// <returns>Calculation result directory</returns>
@@ -143,7 +203,7 @@ namespace tNavigatorLauncher
                     {
                         FileName = exeFile,
                         Arguments =
-                            $"--use-gpu \"{launcherConfig.ProjectDir}\" --ecl-rsm --ecl-root -eiru --ignore-lock",
+                            $"--use-gpu \"{launcherConfig.DataPath}\" --ecl-rsm --ecl-root -eiru --ignore-lock",
                         RedirectStandardOutput = true,
                         UseShellExecute = false,
                         CreateNoWindow = true,
@@ -174,12 +234,10 @@ namespace tNavigatorLauncher
         }
 
 
-        public CalculationResult? Start(TNavigatorProject project)
+        public Result? Start(Project project)
         {
-            CreateProjectFiles(project);
-            return null;
-
-            TNavigatorRun();
+            //CreateProjectFiles(project);
+            //TNavigatorRun();
             var calculationResult = ReadCalculationResult();
             return calculationResult;
         }

@@ -3,6 +3,7 @@ using System.Net;
 using System.Text;
 using MessageBroker;
 using tNavigatorModels;
+using tNavigatorModels.Project;
 using Utils;
 using static MessageBroker.BrokerQueue;
 
@@ -32,7 +33,7 @@ namespace tNavigatorDistributionNode
 
             void ReceivedEventHandler(byte[] message)
             {
-                var result = JsonUtil.Deserialize<TNavigatorResult>(Encoding.UTF8.GetString(message));
+                var result = JsonUtil.Deserialize<Result>(Encoding.UTF8.GetString(message));
                 if (result.Message is not null)
                 {
                     Console.WriteLine(result.Message);
@@ -56,7 +57,7 @@ namespace tNavigatorDistributionNode
 
                 var targetDirNetworkPath = $"//{hostName}/{sharedDir.Name}/{Path.GetFileName(projectDirPath)}";
 
-                var message = JsonUtil.Serialize(new TNavigatorModel(targetDirNetworkPath));
+                var message = JsonUtil.Serialize(new ConsumeModel(targetDirNetworkPath));
                 await messageBroker.PublishMessage(message);
 
                 projectDirs.Add(targetDirNetworkPath);
