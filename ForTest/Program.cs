@@ -15,16 +15,13 @@ namespace ForTest
                 tNavExe = @"C:\Program Files\RFD\tNavigator\23.4\tNavigator-con.exe";
 
             InitFile(projectFile);
-            var launcher = new Launcher(new LauncherConfig(tNavExe, projectDir));
 
             string fileText = File.ReadAllText(projectFile);
             var tNavProject = JsonSerializer.Deserialize<Project>(fileText)!;
+            var launcher = new Launcher(new LauncherConfig(tNavExe, projectDir), tNavProject);
 
-            launcher.Start(tNavProject);
-
-            var calculationResult = launcher.Start(tNavProject);
-
-            var calculationResultText = JsonSerializer.Serialize(calculationResult);
+            var launcherResult = launcher.Start();
+            var calculationResultText = JsonSerializer.Serialize(launcherResult);
 
             File.WriteAllText(@"C:\Users\KosachevIV\Source\Repos\tNavigatorComputerNetwork\ForTest\result.json",
                 calculationResultText);
@@ -38,7 +35,7 @@ namespace ForTest
 
             for (int i = 20; i < 21; i++)
             {
-                for (int j = 20; j < 21; j++)
+                for (int j = 20; j < 22; j++)
                 {
                     var coordinates = new CoordinatePoint[]
                     {
@@ -48,8 +45,8 @@ namespace ForTest
                     };
 
                     boreholes.Add(new Borehole($"Well-{i}-{j}", coordinates, new DateTime(2023, 1, 1)));
-                 
-                    openPerforation.Add(new ()
+
+                    openPerforation.Add(new()
                     {
                         Step = 5,
                         StartMD = 2400,
@@ -80,8 +77,6 @@ namespace ForTest
                     //    EndMD = 2415,
                     //    BoreholeName = boreholes.Last().Name
                     //});
-
-
                 }
             }
 
@@ -89,13 +84,13 @@ namespace ForTest
             {
                 Events = new EventSchedule()
                 {
-                    AddPerforationEvents = openPerforation.ToArray(),
-                    ClosePerforationEvents = closePerforation.ToArray()
+                    AddPerforationEvents = [.. openPerforation],
+                    ClosePerforationEvents = [.. closePerforation]
                 }
             };
             schedule.CurrentStep = schedule.Events.GetAllEvents().Max(e => e.Step) + 15;
 
-            var project = new Project(boreholes.ToArray(), schedule, new Team("BestTeam"));
+            var project = new Project([..boreholes], schedule, new Team("BestTeam"));
             var projectData = JsonSerializer.Serialize(project);
             File.WriteAllText(projectPath, projectData);
         }

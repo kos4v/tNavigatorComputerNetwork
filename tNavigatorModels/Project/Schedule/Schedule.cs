@@ -1,4 +1,5 @@
 ﻿using tNavigatorModels.Project.Schedule.Events;
+using tNavigatorModels.Result;
 
 namespace tNavigatorModels.Project.Schedule
 {
@@ -9,8 +10,15 @@ namespace tNavigatorModels.Project.Schedule
         public EventSchedule Events { get; set; }
 
         public static string ResultRootPythonVariable => "root_result_dir";
-        public static string DebitDir => "DebitData";
 
+        public static Dictionary<EnumDataType, string> DebitDirName =
+            new()
+            {
+                { EnumDataType.TotalDebit, "TotalDebitData" },
+                { EnumDataType.OilDebit, "OilDebitData" },
+                { EnumDataType.GasDebit, "GasDebitData" },
+                { EnumDataType.WaterDebit, "WaterDebitData" },
+            };
 
         public static string DateTNavString(int step)
         {

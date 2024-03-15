@@ -1,25 +1,24 @@
 ﻿namespace tNavigatorModels.Result;
 
-public class PointValue
+public enum EnumDataType
 {
-    public int ZCell { get; set; }
-    public double Value { get; set; }
+    WaterDebit,
+    OilDebit,
+    GasDebit,
+    TotalDebit
 }
 
-public class ResultBoreholeDebit
+public class BoreholeData
 {
-    public DateOnly Date { get; set; }
-    public PointValue[] Values { get; set; }
-}
-
-public class ResultBorehole
-{
+    public DateTime Date { get; set; }
     public string BoreholeName { get; set; }
-    public ResultBoreholeDebit[] Debit { get; set; }
+    public EnumDataType DataType { get; set; }
+    public List<int> ZCell { get; set; } = new();
+    public List<double> Value { get; set; } = new();
 }
 
 public class Result
 {
     public string TeamName { get; set; }
-    public ResultBorehole[] BoreholeResults { get; set; }
+    public List<BoreholeData> BoreholeResults { get; set; } = new();
 }
