@@ -17,8 +17,9 @@ public class BoreholeData
     public List<double> Value { get; set; } = new();
 }
 
-public class Result
+public class ModelResult
 {
     public string TeamName { get; set; }
     public List<BoreholeData> BoreholeResults { get; set; } = new();
+    public string? Report { get; set; }
 }

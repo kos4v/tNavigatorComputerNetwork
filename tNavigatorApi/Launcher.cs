@@ -1,8 +1,11 @@
 ﻿using System.Diagnostics;
 using System.Text;
+using MessageBroker;
 using tNavigatorLauncher.FileParsers;
+using tNavigatorModels;
 using tNavigatorModels.Project;
 using tNavigatorModels.Project.Schedule;
+
 
 namespace tNavigatorLauncher
 {
@@ -12,21 +15,26 @@ namespace tNavigatorLauncher
 
         public NavigatorFileController FileController { get; set; } = new(launcherConfig, project);
 
+        public static void SendTask(BrokerConfig config, Project project)
+        {
+            var calculationBroker = config.GetBroker(BrokerQueue.ModelReadyCalculation);
+            calculationBroker.PublishMessage(JsonUtil.Serialize(project));
+        }
+
+
+        public tNavigatorModels.Result.ModelResult Start()
+        {
+            //CreateProjectFiles();
+            //TNavigatorRun();
+            var calculationResult = ReadCalculationResult();
+            return calculationResult;
+        }
+
         public void CreateProjectFiles()
         {
             FileController.ModifyData();
             FileController.InitSchedule();
             FileController.InitBoreholes();
-        }
-
-
-        public tNavigatorModels.Result.Result ReadCalculationResult()
-        {
-            return new tNavigatorModels.Result.Result()
-            {
-                TeamName = project.Team.Name,
-                BoreholeResults = Schedule.DebitDirName.Keys.SelectMany(FileController.GetDebit).ToList()
-            };
         }
 
         /// <returns>Calculation result directory</returns>
@@ -61,12 +69,13 @@ namespace tNavigatorLauncher
             }
         }
 
-        public tNavigatorModels.Result.Result Start()
+        public tNavigatorModels.Result.ModelResult ReadCalculationResult()
         {
-            CreateProjectFiles();
-            TNavigatorRun();
-            var calculationResult = ReadCalculationResult();
-            return calculationResult;
+            return new tNavigatorModels.Result.ModelResult()
+            {
+                TeamName = project.Team.Name,
+                BoreholeResults = Schedule.DebitDirName.Keys.SelectMany(FileController.GetDebit).ToList()
+            };
         }
     }
 }

@@ -2,6 +2,7 @@
 
 public interface IMessageBroker
 {
+    public string QueueName { get; }
     public CancellationTokenSource ConsumeCancelTokenSource { get; set; }
     public CancellationTokenSource PublishCancelTokenSource { get; set; }
 

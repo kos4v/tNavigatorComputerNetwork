@@ -1,6 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Security.AccessControl;
-using System.Security.Principal;
 
 namespace Utils
 {
@@ -104,6 +102,14 @@ namespace Utils
             var dirName = directory.Split(@"\").Last();
             var arguments = $"New-SmbShare -Name {dirName} -Path {directory} –FullAccess все";
             StartProcess(arguments);
+        }
+
+        public static void ReCreateWorkDir(string path)
+        {
+            if (Directory.Exists(path))
+                Directory.Delete(path, true);
+
+            Directory.CreateDirectory(path);
         }
     }
 }

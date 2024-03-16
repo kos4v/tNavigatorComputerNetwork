@@ -8,19 +8,23 @@ namespace MessageBroker;
 public enum BrokerQueue
 {
     ModelCalculation,
+    ModelReadyCalculation,
     ModelResult,
 }
 
 public class RabbitMQMessageBroker(
     string hostname,
-    string? user,
-    string? password,
-    BrokerQueue queue) : IMessageBroker
+    string user,
+    string password,
+    BrokerQueue queue,
+    string? resultQueueName = null) : IMessageBroker
 {
-    private readonly string _queueName = queue switch
+    public string QueueName => queue switch
     {
         BrokerQueue.ModelCalculation => "model-calculation",
-        BrokerQueue.ModelResult => "model-result",
+        BrokerQueue.ModelReadyCalculation=> "model-ready-calculation",
+        BrokerQueue.ModelResult =>
+            $"model-result{resultQueueName ?? throw new ArgumentException("if BrokerQueue is ModelResult resultQueueName can't be null")}",
         _ => throw new ArgumentOutOfRangeException(nameof(queue), queue, null)
     };
 
@@ -41,6 +45,8 @@ public class RabbitMQMessageBroker(
 
 
     public CancellationTokenSource? PublishCancelTokenSource { get; set; }
+
+
     public CancellationTokenSource ConsumeCancelTokenSource { get; set; } = new();
 
 
@@ -51,17 +57,17 @@ public class RabbitMQMessageBroker(
     {
         using var connection = MakeFactory().CreateConnection();
         using var channel = connection.CreateModel();
-        channel.QueuePurge(_queueName);
+        channel.QueuePurge(QueueName);
     }
 
     public int GetConsumersCount()
     {
         using var connection = MakeFactory().CreateConnection();
         using var channel = connection.CreateModel();
-        return (int)channel.ConsumerCount(_queueName);
+        return (int)channel.ConsumerCount(QueueName);
     }
 
-    private async Task PublisherAsync(int reloadPublisherInSecond = 20)
+    private async Task PublisherAsync(int reloadPublisherInSecond = 5)
     {
         try
         {
@@ -77,10 +83,11 @@ public class RabbitMQMessageBroker(
             using var connection = MakeFactory().CreateConnection();
             using var channel = connection.CreateModel();
 
-            var queue = channel.QueueDeclare(queue: _queueName,
+
+            var rabbitQueue = channel.QueueDeclare(queue: QueueName,
                 durable: true,
                 exclusive: false,
-                autoDelete: false,
+                autoDelete: queue == BrokerQueue.ModelResult,
                 arguments: null);
 
 
@@ -89,7 +96,7 @@ public class RabbitMQMessageBroker(
                 if (MessageStack.TryDequeue(out byte[]? stackMessage))
                 {
                     channel.BasicPublish(exchange: "",
-                        routingKey: _queueName,
+                        routingKey: QueueName,
                         basicProperties: null,
                         body: stackMessage);
                 }
@@ -116,16 +123,18 @@ public class RabbitMQMessageBroker(
 
     public async Task ConsumeMessageAsync(Action<byte[]> job)
     {
+        ConsumeCancelTokenSource = new();
         ConsumeCancellationToken = ConsumeCancelTokenSource.Token;
+
         using var connection = MakeFactory().CreateConnection();
 
         using var channel = connection.CreateModel();
 
         channel.BasicQos(0, 1, true);
-        channel.QueueDeclare(queue: _queueName,
+        channel.QueueDeclare(queue: QueueName,
             durable: true,
             exclusive: false,
-            autoDelete: false,
+            autoDelete: queue == BrokerQueue.ModelResult,
             arguments: null);
 
         var consumer = new EventingBasicConsumer(channel);
@@ -136,7 +145,7 @@ public class RabbitMQMessageBroker(
             channel.BasicAck(e.DeliveryTag, false);
         };
 
-        channel.BasicConsume(queue: _queueName,
+        channel.BasicConsume(queue: QueueName,
             autoAck: false,
             consumer: consumer,
             consumerTag: Dns.GetHostName());

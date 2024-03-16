@@ -1,5 +1,7 @@
-﻿using System.Text.Json;
+﻿using System.Net;
+using System.Text.Json;
 using tNavigatorLauncher;
+using tNavigatorModels;
 using tNavigatorModels.Project;
 using tNavigatorModels.Project.Schedule;
 using tNavigatorModels.Project.Schedule.Events;
@@ -8,23 +10,49 @@ namespace ForTest
 {
     internal class Program
     {
+        public static string Url => "http://localhost:5105/test?secret=asd";
+
         static void Main(string[] args)
         {
-            string projectFile = "tNavigatorProject.json",
-                projectDir = @"C:\Users\KosachevIV\Desktop\tNavTests\modelLaunch",
-                tNavExe = @"C:\Program Files\RFD\tNavigator\23.4\tNavigator-con.exe";
+            NodeLaunch();
+        }
+
+        private static void NodeLaunch()
+        {
+            var projectFile = "tNavigatorProject.json";
+            InitFile(projectFile);
+
+            var fileText = File.ReadAllText(projectFile);
+            var tNavProject = JsonSerializer.Deserialize<Project>(fileText)!;
+
+            var brokerConfig = new BrokerConfig()
+            {
+                BrokerHostname = "195.133.145.105",
+                BrokerUsername = "guest",
+                BrokerPassword = "J4ntpgFtKTzG84LD"
+            };
+
+            Launcher.SendTask(brokerConfig, tNavProject);
+        }
+
+        private static void LocalLaunch(string projectPath)
+        {
+            const string projectFile = "tNavigatorProject.json";
+            const string projectDir = @"C:\Users\KosachevIV\Desktop\tNavTests\modelLaunch";
+            const string tNavExe = @"C:\Program Files\RFD\tNavigator\23.4\tNavigator-con.exe";
+            const string result = @"C:\Users\KosachevIV\Source\Repos\tNavigatorComputerNetwork\ForTest\result.json";
 
             InitFile(projectFile);
 
             string fileText = File.ReadAllText(projectFile);
+
             var tNavProject = JsonSerializer.Deserialize<Project>(fileText)!;
             var launcher = new Launcher(new LauncherConfig(tNavExe, projectDir), tNavProject);
 
             var launcherResult = launcher.Start();
             var calculationResultText = JsonSerializer.Serialize(launcherResult);
 
-            File.WriteAllText(@"C:\Users\KosachevIV\Source\Repos\tNavigatorComputerNetwork\ForTest\result.json",
-                calculationResultText);
+            File.WriteAllText(result,calculationResultText);
         }
 
         private static void InitFile(string projectPath)
@@ -90,7 +118,7 @@ namespace ForTest
             };
             schedule.CurrentStep = schedule.Events.GetAllEvents().Max(e => e.Step) + 15;
 
-            var project = new Project([..boreholes], schedule, new Team("BestTeam"));
+            var project = new Project([..boreholes], schedule, new Team("BestTeam"), Url);
             var projectData = JsonSerializer.Serialize(project);
             File.WriteAllText(projectPath, projectData);
         }
