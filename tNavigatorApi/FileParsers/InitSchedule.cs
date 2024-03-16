@@ -46,6 +46,11 @@ namespace tNavigatorLauncher.FileParsers
                 {
                     AddRange([grouping.Key, ..grouping.Select(e => e.TNavString()), "/", ""]);
                 }
+
+                //for (int hour = 1; hour < 24; hour++)
+                //{
+                //    Add(Schedule.DateTNavString(i, hour));
+                //}
             }
 
             AddRange([Schedule.DateTNavString(project.Schedule.CurrentStep), "END"]);

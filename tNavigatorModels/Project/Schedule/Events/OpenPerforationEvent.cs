@@ -5,6 +5,7 @@
         public int StartMD { get; set; }
         public int EndMD { get; set; }
         public string BoreholeName { get; set; }
+        public int BoreholeDownholePressure { get; set; } = 200;
         public EnumEventName EventName => EnumEventName.OpenPerforation;
         public int Step { get; set; }
 
@@ -31,7 +32,7 @@
             "OPEN",
             "BHP",
             "5*",
-            "200",
+            $"{BoreholeDownholePressure}",
             "/",
         ]);
     }

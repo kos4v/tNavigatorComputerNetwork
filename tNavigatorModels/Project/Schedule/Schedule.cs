@@ -20,10 +20,10 @@ namespace tNavigatorModels.Project.Schedule
                 { EnumDataType.WaterDebit, "WaterDebitData" },
             };
 
-        public static string DateTNavString(int step)
+        public static string DateTNavString(int step, int hour = 0)
         {
             var date = StartDate.AddDays(step);
-            return $"DATES\r\n {date.Day} {MonthConvert(date.Month)} {date.Year} /\r\n /\n";
+            return $"DATES\r\n {date.Day} {MonthConvert(date.Month)} {date.Year} {hour}:{00}:{00} /\r\n /\n";
         }
 
         public static string ScriptsTNavString(string scriptsPath, string resultDirPath)

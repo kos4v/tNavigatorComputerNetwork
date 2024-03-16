@@ -24,8 +24,8 @@ namespace tNavigatorLauncher
 
         public tNavigatorModels.Result.ModelResult Start()
         {
-            //CreateProjectFiles();
-            //TNavigatorRun();
+            CreateProjectFiles();
+            TNavigatorRun();
             var calculationResult = ReadCalculationResult();
             return calculationResult;
         }

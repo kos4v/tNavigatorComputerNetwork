@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Net;
 using System.Text.Json;
 using tNavigatorLauncher;
 using tNavigatorModels;
@@ -11,20 +12,22 @@ namespace ForTest
     internal class Program
     {
         public static string Url => "http://localhost:5105/test?secret=asd";
+        public static string TNavExe => @"C:\Program Files\RFD\tNavigator\23.4\tNavigator-con.exe";
 
         static void Main(string[] args)
         {
-            NodeLaunch();
+            // Использовать RESTART для продолжения с указанной даты
+
+
+            var sw = Stopwatch.StartNew();
+            LocalLaunch();
+            Console.WriteLine(sw.Elapsed);
+            Console.ReadKey();
+
         }
 
         private static void NodeLaunch()
         {
-            var projectFile = "tNavigatorProject.json";
-            InitFile(projectFile);
-
-            var fileText = File.ReadAllText(projectFile);
-            var tNavProject = JsonSerializer.Deserialize<Project>(fileText)!;
-
             var brokerConfig = new BrokerConfig()
             {
                 BrokerHostname = "195.133.145.105",
@@ -32,27 +35,31 @@ namespace ForTest
                 BrokerPassword = "J4ntpgFtKTzG84LD"
             };
 
-            Launcher.SendTask(brokerConfig, tNavProject);
+            Launcher.SendTask(brokerConfig, GetProject());
         }
 
-        private static void LocalLaunch(string projectPath)
+        private static void LocalLaunch()
         {
-            const string projectFile = "tNavigatorProject.json";
             const string projectDir = @"C:\Users\KosachevIV\Desktop\tNavTests\modelLaunch";
-            const string tNavExe = @"C:\Program Files\RFD\tNavigator\23.4\tNavigator-con.exe";
             const string result = @"C:\Users\KosachevIV\Source\Repos\tNavigatorComputerNetwork\ForTest\result.json";
 
-            InitFile(projectFile);
-
-            string fileText = File.ReadAllText(projectFile);
-
-            var tNavProject = JsonSerializer.Deserialize<Project>(fileText)!;
-            var launcher = new Launcher(new LauncherConfig(tNavExe, projectDir), tNavProject);
+            var launcher = new Launcher(new LauncherConfig(TNavExe, projectDir), GetProject());
 
             var launcherResult = launcher.Start();
             var calculationResultText = JsonSerializer.Serialize(launcherResult);
 
-            File.WriteAllText(result,calculationResultText);
+            File.WriteAllText(result, calculationResultText);
+        }
+
+        public static Project GetProject()
+        {
+            const string projectFile = "tNavigatorProject.json";
+
+            InitFile(projectFile);
+            string fileText = File.ReadAllText(projectFile);
+
+            var tNavProject = JsonSerializer.Deserialize<Project>(fileText)!;
+            return tNavProject;
         }
 
         private static void InitFile(string projectPath)
@@ -61,52 +68,32 @@ namespace ForTest
             var openPerforation = new List<OpenPerforationEvent>();
             var closePerforation = new List<ClosePerforationEvent>();
 
-            for (int i = 20; i < 21; i++)
+
+            CoordinatePoint[] GetPoints(int x, int y) =>
+            [
+                new(x, y, 100, 1),
+                new(x, y, 500, 2),
+                new(x, y, 2500, 3)
+            ];
+
+            Borehole GetBorehole(int x, int y)
+                => new($"Well-{x}-{y}", GetPoints(x, y), new DateTime(2024, 1, 1));
+
+            void AddPerforation(int step, string name, int pressure) => openPerforation.Add(new()
             {
-                for (int j = 20; j < 22; j++)
-                {
-                    var coordinates = new CoordinatePoint[]
-                    {
-                        new(i, j, 100, 1),
-                        new(i, j, 500, 2),
-                        new(i, j, 2500, 3),
-                    };
+                Step = step,
+                StartMD = 2400,
+                EndMD = 2450,
+                BoreholeName = name,
+                BoreholeDownholePressure = pressure
+            });
 
-                    boreholes.Add(new Borehole($"Well-{i}-{j}", coordinates, new DateTime(2023, 1, 1)));
+            var borehole = GetBorehole(20, 22);
+            boreholes.Add(borehole);
 
-                    openPerforation.Add(new()
-                    {
-                        Step = 5,
-                        StartMD = 2400,
-                        EndMD = 2450,
-                        BoreholeName = boreholes.Last().Name
-                    });
+            AddPerforation(1, borehole.Name, 200);
+            AddPerforation(50, borehole.Name, 300);
 
-                    //closePerforation.Add(new()
-                    //{
-                    //    Step = i * j + 3,
-                    //    StartMD = 2400,
-                    //    EndMD = 2410,
-                    //    BoreholeName = boreholes.Last().Name
-                    //});
-
-                    //openPerforation.Add(new()
-                    //{
-                    //    Step = i * j + 3,
-                    //    StartMD = 2412,
-                    //    EndMD = 2415,
-                    //    BoreholeName = boreholes.Last().Name
-                    //});
-
-                    //closePerforation.Add(new()
-                    //{
-                    //    Step = i * j + 3 + 3,
-                    //    StartMD = 2412,
-                    //    EndMD = 2415,
-                    //    BoreholeName = boreholes.Last().Name
-                    //});
-                }
-            }
 
             var schedule = new Schedule()
             {
@@ -116,7 +103,8 @@ namespace ForTest
                     ClosePerforationEvents = [.. closePerforation]
                 }
             };
-            schedule.CurrentStep = schedule.Events.GetAllEvents().Max(e => e.Step) + 15;
+            schedule.CurrentStep = schedule.Events.GetAllEvents().Max(e => e.Step) + 50;
+            //schedule.CurrentStep = 30;
 
             var project = new Project([..boreholes], schedule, new Team("BestTeam"), Url);
             var projectData = JsonSerializer.Serialize(project);
