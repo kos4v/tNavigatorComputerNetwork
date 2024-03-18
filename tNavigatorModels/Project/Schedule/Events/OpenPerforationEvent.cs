@@ -2,8 +2,8 @@
 {
     public class OpenPerforationEvent() : IBaseEvent
     {
-        public int StartMD { get; set; }
-        public int EndMD { get; set; }
+        public double StartMD { get; set; }
+        public double EndMD { get; set; }
         public string BoreholeName { get; set; }
         public EnumEventName EventName => EnumEventName.OpenPerforation;
         public int Step { get; set; }
