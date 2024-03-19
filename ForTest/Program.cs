@@ -73,8 +73,7 @@ namespace ForTest
                 new(x, y, 2500, 3)
             ];
 
-            Borehole GetBorehole(int x, int y)
-                => new($"Well-{x}-{y}", GetPoints(x, y), new DateTime(2024, 1, 1));
+            Borehole GetBorehole(int x, int y) => new($"Well-{x}-{y}", GetPoints(x, y));
 
             void AddOpenPerforation(int step, string name) => openPerforation.Add(new()
             {
@@ -113,7 +112,6 @@ namespace ForTest
             AddOpenPerforation(10, borehole.Name);
             AddChangeBoreholeControl(10, borehole.Name);
             AddClosePerforation(20, borehole.Name);
-
 
 
             var schedule = new Schedule()
