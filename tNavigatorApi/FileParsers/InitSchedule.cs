@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using tNavigatorModels.Project.Schedule;
+﻿using tNavigatorModels.Project.Schedule;
 
 namespace tNavigatorLauncher.FileParsers
 {
@@ -17,20 +16,11 @@ namespace tNavigatorLauncher.FileParsers
                 "",
                 "INCLUDE",
                 $"'INCLUDE/{Path.GetFileName(launcherConfig.WellTrackPath)}' /",
+                "WELSPECS",
+                ..project.Boreholes.Select(borehole => $"   '{borehole.Name}'   1*  2*  /"), "/"
             ]);
-
-            AddRange(["WELSPECS", ..project.Boreholes.Select(borehole => $"   '{borehole.Name}'   1*  2*  /"), "/"]);
 
             Add(Schedule.ScriptsTNavString(launcherConfig.ScriptDirPath, launcherConfig.ResultDirPath));
-
-            AddRange(
-            [
-                "COMPDATMD",
-                ..project.Boreholes.SelectMany(borehole => project.Schedule.Events.AddPerforationEvents
-                    .Where(p => p.BoreholeName == borehole.Name)
-                    .Select(perforation => perforation.COMPDATMDString())),
-                "/"
-            ]);
 
             // В *.data указана дата старта её нельзя указывать в DATES
             var eventsCalendar = project.Schedule.Events.GetAllEvents()
@@ -54,7 +44,6 @@ namespace tNavigatorLauncher.FileParsers
             }
 
             AddRange([Schedule.DateTNavString(project.Schedule.CurrentStep), "END"]);
-
             File.WriteAllText(launcherConfig.SchedulePath, string.Join('\n', schedule_inc));
         }
     }

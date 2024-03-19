@@ -23,8 +23,7 @@ def save(dir_path: str, df):
 	file_path = os.path.join(dir_path, f'{int(get_calculated_time())}.csv')
 	df.to_csv(file_path, sep=';')
 	
-	
-def hello():
+def start():
 	re_create_dir(root_result_dir)
 	
 	# save_liquid_debit_by_perforation
@@ -38,3 +37,12 @@ def hello():
 	
 	# save_water_debit_by_perforation()
 	save(water_debit_dir, cwpr.to_dataframe())
+	
+	
+def hello():
+	try:
+		start
+	except  Exception as e:
+		print(e)
+		
+	

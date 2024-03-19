@@ -26,7 +26,8 @@ internal class Program
         async void Calculate(byte[] message)
         {
             var result = new ModelResult();
-            var project = JsonUtil.Deserialize<Project>(Encoding.UTF8.GetString(message))!;
+            var resultMessage = Encoding.UTF8.GetString(message);
+            var project = JsonUtil.Deserialize<Project>(resultMessage)!;
 
             try
             {
@@ -53,7 +54,11 @@ internal class Program
 
             try
             {
-                var response = await client.PostAsync(url, content);
+                //var response = await client.PatchAsync(url, content);
+                var response = client.PatchAsync(url, content).Result;
+                response.EnsureSuccessStatusCode();
+                var res = response.Content.ReadAsStringAsync().Result;
+
                 Log($"{await response.Content.ReadAsStringAsync()} {response.StatusCode}");
             }
             catch (Exception e)

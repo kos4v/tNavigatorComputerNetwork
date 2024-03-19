@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Net;
 using System.Text.Json;
 using tNavigatorLauncher;
 using tNavigatorModels;
@@ -17,13 +16,10 @@ namespace ForTest
         static void Main(string[] args)
         {
             // Использовать RESTART для продолжения с указанной даты
-
-
             var sw = Stopwatch.StartNew();
             LocalLaunch();
             Console.WriteLine(sw.Elapsed);
             Console.ReadKey();
-
         }
 
         private static void NodeLaunch()
@@ -64,9 +60,10 @@ namespace ForTest
 
         private static void InitFile(string projectPath)
         {
-            var boreholes = new List<Borehole>();
-            var openPerforation = new List<OpenPerforationEvent>();
-            var closePerforation = new List<ClosePerforationEvent>();
+            List<Borehole> boreholes = [];
+            List<OpenPerforationEvent> openPerforation = [];
+            List<ClosePerforationEvent> closePerforation = [];
+            List<ChangeBoreholeControlEvent> changeBoreholeControl = [];
 
 
             CoordinatePoint[] GetPoints(int x, int y) =>
@@ -79,31 +76,56 @@ namespace ForTest
             Borehole GetBorehole(int x, int y)
                 => new($"Well-{x}-{y}", GetPoints(x, y), new DateTime(2024, 1, 1));
 
-            void AddPerforation(int step, string name, int pressure) => openPerforation.Add(new()
+            void AddOpenPerforation(int step, string name) => openPerforation.Add(new()
             {
                 Step = step,
                 StartMD = 2400,
                 EndMD = 2450,
+                BoreholeName = name
+            });
+
+            void AddClosePerforation(int step, string name) => closePerforation.Add(new()
+            {
+                Step = step,
+                StartMD = 2400,
+                EndMD = 2450,
+                BoreholeName = name
+            });
+
+            void AddChangeBoreholeControl(int step, string name) => changeBoreholeControl.Add(new()
+            {
+                Step = step,
                 BoreholeName = name,
-                BoreholeDownholePressure = pressure
+                ControlType = EnumControlType.Pressure,
+                DebitControlVolume = 200
             });
 
             var borehole = GetBorehole(20, 22);
             boreholes.Add(borehole);
 
-            AddPerforation(1, borehole.Name, 200);
-            AddPerforation(50, borehole.Name, 300);
+            AddOpenPerforation(1, borehole.Name);
+            AddChangeBoreholeControl(1, borehole.Name);
+            AddClosePerforation(15, borehole.Name);
+
+            borehole = GetBorehole(20, 23);
+            boreholes.Add(borehole);
+
+            AddOpenPerforation(10, borehole.Name);
+            AddChangeBoreholeControl(10, borehole.Name);
+            AddClosePerforation(20, borehole.Name);
+
 
 
             var schedule = new Schedule()
             {
                 Events = new EventSchedule()
                 {
-                    AddPerforationEvents = [.. openPerforation],
-                    ClosePerforationEvents = [.. closePerforation]
+                    OpenPerforationEvents = [.. openPerforation],
+                    ClosePerforationEvents = [.. closePerforation],
+                    ChangeBoreholeControlEvent = [..changeBoreholeControl]
                 }
             };
-            schedule.CurrentStep = schedule.Events.GetAllEvents().Max(e => e.Step) + 50;
+            schedule.CurrentStep = schedule.Events.GetAllEvents().Max(e => e.Step) + 10;
             //schedule.CurrentStep = 30;
 
             var project = new Project([..boreholes], schedule, new Team("BestTeam"), Url);
