@@ -35,6 +35,7 @@ namespace tNavigatorLauncher
             FileController.ModifyData();
             FileController.InitSchedule();
             FileController.InitBoreholes();
+            Utils.Dir.ReCreateWorkDir(launcherConfig.ResultDirPath);
         }
 
         /// <returns>Calculation result directory</returns>

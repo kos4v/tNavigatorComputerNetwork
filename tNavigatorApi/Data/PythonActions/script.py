@@ -1,4 +1,5 @@
 import os
+import sys
 
 # c# change this row
 root_result_dir = ''
@@ -17,24 +18,36 @@ def re_create_dir(dir_name) -> str:
 
 
 
-def save(dir_path: str, df):
-	dir_path = re_create_dir(dir_path)
-
-	file_path = os.path.join(dir_path, f'{int(get_calculated_time())}.csv')
-	df.to_csv(file_path, sep=';')
+def save(dir_path: str, data_object):
+	try:
+		dir_path = re_create_dir(dir_path)
+		file_path = os.path.join(dir_path, f'{int(get_calculated_time())}.csv')
+		df = data_object.to_dataframe()
+		df.to_csv(file_path, sep=';')
+	except Exception as e:
+		print(e)
 	
-	
-def hello():
+def start_record_files():
 	re_create_dir(root_result_dir)
 	
 	# save_liquid_debit_by_perforation
-	save(total_debit_dir, cvpr.to_dataframe())
+	save(total_debit_dir, cvpr)
 	
 	# save_oil_debit_by_perforation()
-	save(oil_debit_dir, copr.to_dataframe())
+	save(oil_debit_dir, copr)
 	
 	# save_gas_debit_by_perforation()
-	save(gas_debit_dir, cgpr.to_dataframe())
+	save(gas_debit_dir, cgpr)
 	
 	# save_water_debit_by_perforation()
-	save(water_debit_dir, cwpr.to_dataframe())
+	save(water_debit_dir, cwpr)
+	
+
+def start():
+	try:
+		print('start')
+		start_record_files()
+	except Exception as e:
+		print(e)
+		
+	

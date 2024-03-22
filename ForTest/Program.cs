@@ -5,13 +5,16 @@ using tNavigatorModels;
 using tNavigatorModels.Project;
 using tNavigatorModels.Project.Schedule;
 using tNavigatorModels.Project.Schedule.Events;
+using static tNavigatorModels.Project.Schedule.Events.EnumControlTypeProductionBorehole;
 
 namespace ForTest
 {
     internal class Program
     {
         public static string Url => "http://localhost:5105/test?secret=asd";
-        public static string TNavExe => @"C:\Program Files\RFD\tNavigator\23.4\tNavigator-con.exe";
+
+        public static string TNavExe =>
+            @"C:\Users\KosachevIV\AppData\Local\Programs\RFD\tNavigator\23.4\tNavigator-con.exe";
 
         static void Main(string[] args)
         {
@@ -37,7 +40,7 @@ namespace ForTest
         private static void LocalLaunch()
         {
             const string projectDir = @"C:\Users\KosachevIV\Desktop\tNavTests\modelLaunch";
-            const string result = @"C:\Users\KosachevIV\Source\Repos\tNavigatorComputerNetwork\ForTest\result.json";
+            const string result = $@"{projectDir}\result.json";
 
             var launcher = new Launcher(new LauncherConfig(TNavExe, projectDir), GetProject());
 
@@ -63,7 +66,53 @@ namespace ForTest
             List<Borehole> boreholes = [];
             List<OpenPerforationEvent> openPerforation = [];
             List<ClosePerforationEvent> closePerforation = [];
-            List<ChangeBoreholeControlEvent> changeBoreholeControl = [];
+            List<ChangeBoreholeToProductionEvent> changeBoreholeToProduction = [];
+            List<ChangeBoreholeToInjectionEvent> changeBoreholeToInjection = [];
+            List<PropertiesRecordEvent> propertiesRecord = [];
+
+            var borehole = GetBorehole(20, 22);
+            boreholes.Add(borehole);
+
+            AddOpenPerforation(5, borehole.Name);
+            AddChangeBoreholeToProductionEvent(5, borehole.Name, WellheadPressure, 200);
+            //AddClosePerforation(15, borehole.Name);
+
+            //borehole = GetBorehole(20, 23);
+            //boreholes.Add(borehole);
+
+            //AddOpenPerforation(10, borehole.Name);
+            //AddChangeBoreholeToProductionEvent(10, borehole.Name, WellheadPressure, 200);
+            //AddChangeBoreholeToProductionEvent(20, borehole.Name, Debit, 20);
+            //AddChangeBoreholeToInjectionEvent(30, borehole.Name, EnumControlTypeInjectionBorehole.WellheadPressure,
+            //    150);
+            //AddClosePerforation(40, borehole.Name);
+
+            for (int i = 1; i < 20; i++)
+            {
+                AddPropertyRecord(10 * i);
+
+            }
+
+
+            var schedule = new Schedule()
+            {
+                Events = new EventSchedule()
+                {
+                    OpenPerforationEvents = [.. openPerforation],
+                    ClosePerforationEvents = [.. closePerforation],
+                    ChangeBoreholeToInjectionEvents = [..changeBoreholeToInjection],
+                    ChangeBoreholeToProductionEvents = [..changeBoreholeToProduction],
+                    PropertiesRecordEvents = [.. propertiesRecord],
+                }
+            };
+
+            schedule.CurrentStep = schedule.Events.GetAllEvents().Max(e => e.Step) + 1;
+
+            var project = new Project([..boreholes], schedule, new Team("BestTeam"), Url);
+            var projectData = JsonSerializer.Serialize(project);
+            File.WriteAllText(projectPath, projectData);
+
+            return;
 
 
             CoordinatePoint[] GetPoints(int x, int y) =>
@@ -91,44 +140,32 @@ namespace ForTest
                 BoreholeName = name
             });
 
-            void AddChangeBoreholeControl(int step, string name) => changeBoreholeControl.Add(new()
-            {
-                Step = step,
-                BoreholeName = name,
-                ControlType = EnumControlType.Pressure,
-                DebitControlVolume = 200
-            });
-
-            var borehole = GetBorehole(20, 22);
-            boreholes.Add(borehole);
-
-            AddOpenPerforation(1, borehole.Name);
-            AddChangeBoreholeControl(1, borehole.Name);
-            AddClosePerforation(15, borehole.Name);
-
-            borehole = GetBorehole(20, 23);
-            boreholes.Add(borehole);
-
-            AddOpenPerforation(10, borehole.Name);
-            AddChangeBoreholeControl(10, borehole.Name);
-            AddClosePerforation(20, borehole.Name);
-
-
-            var schedule = new Schedule()
-            {
-                Events = new EventSchedule()
+            void AddChangeBoreholeToProductionEvent(int step, string name,
+                EnumControlTypeProductionBorehole controlType, int value) =>
+                changeBoreholeToProduction.Add(new()
                 {
-                    OpenPerforationEvents = [.. openPerforation],
-                    ClosePerforationEvents = [.. closePerforation],
-                    ChangeBoreholeControlEvent = [..changeBoreholeControl]
-                }
-            };
-            schedule.CurrentStep = schedule.Events.GetAllEvents().Max(e => e.Step) + 10;
-            //schedule.CurrentStep = 30;
+                    Step = step,
+                    BoreholeName = name,
+                    ControlTypeProductionBorehole = controlType,
+                    DownholePressureControlValue = value,
+                    DebitControlVolume = value
+                });
 
-            var project = new Project([..boreholes], schedule, new Team("BestTeam"), Url);
-            var projectData = JsonSerializer.Serialize(project);
-            File.WriteAllText(projectPath, projectData);
+            void AddChangeBoreholeToInjectionEvent(int step, string name, EnumControlTypeInjectionBorehole controlType,
+                int value) =>
+                changeBoreholeToInjection.Add(new()
+                {
+                    Step = step,
+                    BoreholeName = name,
+                    ControlType = controlType,
+                    LiquidVolume = value,
+                    WellheadPressure = value
+                });
+
+            void AddPropertyRecord(int step) => propertiesRecord.Add(new()
+            {
+                Step = step
+            });
         }
     }
 }

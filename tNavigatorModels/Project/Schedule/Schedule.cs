@@ -5,10 +5,18 @@ namespace tNavigatorModels.Project.Schedule
 {
     public partial class Schedule
     {
+        public static int GetEventPriority(object classType)
+        {
+            return classType switch
+            {
+                PerforationEvent typeEvent => 0,
+                _ => 9999
+            };
+        }
+
         public static DateOnly StartDate => new(2024, 1, 1);
         public int CurrentStep { get; set; }
         public EventSchedule Events { get; set; }
-
         public static string ResultRootPythonVariable => "root_result_dir";
 
         public static Dictionary<EnumDataType, string> DebitDirName =
@@ -20,13 +28,16 @@ namespace tNavigatorModels.Project.Schedule
                 { EnumDataType.WaterDebit, "WaterDebitData" },
             };
 
-        public static string DateTNavString(int step, int hour = 0)
-        {
-            var date = StartDate.AddDays(step);
-            return $"DATES\r\n {date.Day} {MonthConvert(date.Month)} {date.Year} {hour}:{00}:{00} /\r\n /\n";
-        }
+        public static string DateTNavRow(int step) => DateTNavRow(StartDate.AddDays(step));
 
-        public static string ScriptsTNavString(string scriptsPath, string resultDirPath)
+        private static string DateTNavRow(DateOnly date, int hour = 0) =>
+            $"{date.Day} {MonthConvert(date.Month)} {date.Year} {(hour == 0 ? "" : $"{hour}:{00}:{00}")}";
+
+        public static string DateTNavString(int step, int hour = 0) =>
+            $"DATES\r\n {DateTNavRow(StartDate.AddDays(step), hour)} /\r\n /\n";
+
+
+        public static string ScriptsTNavString(string scriptsDir, string resultDirPath, int scriptStartStep)
         {
             var scriptPath = Directory.GetFiles(Path.Combine("Data", "PythonActions"), "*.py").First();
 
@@ -35,10 +46,13 @@ namespace tNavigatorModels.Project.Schedule
             allLines[allLines.FindIndex(c => c.Contains(ResultRootPythonVariable))]
                 = $"{ResultRootPythonVariable} = '{resultDirPath}'".Replace('\\', '/');
 
-            var fileName = Path.GetFileName(scriptPath);
-            File.WriteAllLines(Path.Combine(scriptsPath, fileName), allLines);
+            if (!Directory.Exists(scriptPath))
+                Directory.CreateDirectory(scriptsDir);
 
-            return $"APPLYSCRIPT\r\n './INCLUDE/PythonActions/{fileName}' 'hello' 6* /\r\n /\r\n/";
+            var fileName = Path.GetFileName(scriptPath);
+            File.WriteAllLines(Path.Combine(scriptsDir, fileName), allLines);
+
+            return $"APPLYSCRIPT\r\n './INCLUDE/PythonActions/{fileName}' 'start' 5* {DateTNavRow(scriptStartStep)} / END /\r\n /\r\n/";
         }
     }
 

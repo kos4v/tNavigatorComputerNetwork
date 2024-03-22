@@ -21,6 +21,7 @@ public record LauncherConfig(string TNavigatorConsoleExePath, string ProjectDir)
     public string ScriptDirPath => Path.Combine(IncludeDir, "PythonActions");
     public string ResultDirPath => Path.Combine(ProjectDir, "ResultData");
     public string TNavLaunchArgs => $"--use-gpu \"{DataPath}\" --ecl-rsm --ecl-root -eiru --ignore-lock";
+    public string SolutionPath => Directory.GetFiles(IncludeDir, "*SOLUTION.inc").First();
 
 
     public ModelSize GetModelSize()
