@@ -11,6 +11,7 @@ namespace tNavigatorLauncher
 {
     public class Launcher(LauncherConfig launcherConfig, Project project)
     {
+        private object LockObject = new();
         public string? Output { get; set; }
 
         public NavigatorFileController FileController { get; set; } = new(launcherConfig, project);
@@ -43,23 +44,26 @@ namespace tNavigatorLauncher
         {
             try
             {
-                using Process process = new()
+                lock (LockObject)
                 {
-                    StartInfo = new()
+                    using Process process = new()
                     {
-                        FileName = launcherConfig.TNavigatorConsoleExePath,
-                        Arguments = launcherConfig.TNavLaunchArgs,
-                        RedirectStandardOutput = true,
-                        UseShellExecute = false,
-                        CreateNoWindow = true,
-                        StandardOutputEncoding = Encoding.UTF8,
-                    }
-                };
+                        StartInfo = new()
+                        {
+                            FileName = launcherConfig.TNavigatorConsoleExePath,
+                            Arguments = launcherConfig.TNavLaunchArgs,
+                            RedirectStandardOutput = true,
+                            UseShellExecute = false,
+                            CreateNoWindow = true,
+                            StandardOutputEncoding = Encoding.UTF8,
+                        }
+                    };
 
-                process.Start();
-                Output = process.StandardOutput.ReadToEnd();
+                    process.Start();
+                    Output = process.StandardOutput.ReadToEnd();
 
-                process.WaitForExit();
+                    process.WaitForExit();
+                }
 
                 if (!string.IsNullOrEmpty(Output))
                     Console.WriteLine(Output);

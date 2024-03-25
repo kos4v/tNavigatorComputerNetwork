@@ -36,8 +36,12 @@ namespace tNavigatorLauncher.FileParsers
             for (int i = 1; i < project.Schedule.CurrentStep; i++)
             {
                 eventsCalendar.TryGetValue(i, out var todayEvents);
-                Add(Schedule.DateTNavString(i));
+                if (todayEvents is null)
+                {
+                    continue;
+                }
 
+                Add(Schedule.DateTNavString(i));
                 // Schedule.GetEventPriority позволяет объявить перфорации до взаимодействия с ними
                 // Так же указывает прочий порядок добавление событий
                 foreach (var grouping in (todayEvents ?? []).GroupBy(e => e.EventTNavName).OrderBy(GetPriority))
@@ -49,7 +53,7 @@ namespace tNavigatorLauncher.FileParsers
             AddRange([Schedule.DateTNavString(project.Schedule.CurrentStep), "END"]);
             File.WriteAllText(launcherConfig.SchedulePath, string.Join('\n', scheduleInc));
             return;
-            
+
             int GetPriority(IEnumerable<object> c) => Schedule.GetEventPriority(c.First());
         }
     }

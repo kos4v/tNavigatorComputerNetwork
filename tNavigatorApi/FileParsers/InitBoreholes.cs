@@ -13,7 +13,7 @@ namespace tNavigatorLauncher.FileParsers
                 welltrackInc.Add($"WELLTRACK '{borehole.Name}'");
 
                 welltrackInc.AddRange(borehole.Coordinates.OrderBy(c => c.OrderNumber)
-                    .Select(point => $"{Size.X.Convert(point.X)} {Size.Y.Convert(point.Y)} {point.Z} 1*"));
+                    .Select(point => $"{Size.X.Convert(point.X)} {Size.Y.Convert(point.Y)} {Math.Abs(point.Z)} 1*"));
 
                 welltrackInc[^1] = welltrackInc.Last() + " /";
                 welltrackInc.Add("");

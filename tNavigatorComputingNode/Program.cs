@@ -14,10 +14,10 @@ internal class Program
     static void Main(string[] args)
     {
         Console.Title = nameof(tNavigatorComputingNode);
+        Log("Start");
 
         var config = NodeConfig.LoadConfig("config.json");
         var brokerForConsumeTask = config.GetBroker(BrokerQueue.ModelReadyCalculation);
-        Log("Start");
 
         brokerForConsumeTask.ConsumeMessageAsync(Calculate);
         Console.ReadKey();
@@ -25,9 +25,13 @@ internal class Program
 
         async void Calculate(byte[] message)
         {
-            var result = new ModelResult();
             var resultMessage = Encoding.UTF8.GetString(message);
             var project = JsonUtil.Deserialize<Project>(resultMessage)!;
+            var result = new ModelResult()
+            {
+                TeamName = project.Team.Name
+            };
+
 
             try
             {

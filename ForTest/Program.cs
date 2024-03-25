@@ -87,10 +87,9 @@ namespace ForTest
             //    150);
             //AddClosePerforation(40, borehole.Name);
 
-            for (int i = 1; i < 20; i++)
+            for (int i = 1; i < 5; i++)
             {
                 AddPropertyRecord(10 * i);
-
             }
 
 
