@@ -1,5 +1,4 @@
-﻿using System;
-using tNavigatorModels.Project.Schedule;
+﻿using tNavigatorModels.Project.Schedule;
 using tNavigatorModels.Project.Schedule.Events;
 
 namespace tNavigatorLauncher.FileParsers
@@ -13,7 +12,7 @@ namespace tNavigatorLauncher.FileParsers
             void Add(string row) => AddRange([row]);
 
             var allEvents = project.Schedule.Events.GetAllEvents();
-            var scriptStartStep = allEvents.OfType<OpenPerforationEvent>().MinBy(c => c.Step).Step;
+            var scriptStartStep = (allEvents?.OfType<OpenPerforationEvent>().MinBy(c => c.Step)?.Step ?? 0) + 1;
 
             AddRange([
                 "RPTSCHED",
@@ -33,13 +32,15 @@ namespace tNavigatorLauncher.FileParsers
                 .ToDictionary(events => events.Key, events => events.ToArray());
 
             // i = 1 т.к. В *.data указана дата старта её нельзя указывать в DATES
+            IBaseEvent? firstEvent = null;
             for (int i = 1; i < project.Schedule.CurrentStep; i++)
             {
                 eventsCalendar.TryGetValue(i, out var todayEvents);
-                if (todayEvents is null)
+                if (todayEvents is null && firstEvent is null)
                 {
                     continue;
                 }
+                firstEvent ??= todayEvents!.First();
 
                 Add(Schedule.DateTNavString(i));
                 // Schedule.GetEventPriority позволяет объявить перфорации до взаимодействия с ними

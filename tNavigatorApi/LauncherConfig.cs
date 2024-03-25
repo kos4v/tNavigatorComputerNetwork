@@ -22,6 +22,7 @@ public record LauncherConfig(string TNavigatorConsoleExePath, string ProjectDir)
     public string ResultDirPath => Path.Combine(ProjectDir, "ResultData");
     public string TNavLaunchArgs => $"--use-gpu \"{DataPath}\" --ecl-rsm --ecl-root -eiru --ignore-lock";
     public string SolutionPath => Directory.GetFiles(IncludeDir, "*SOLUTION.inc").First();
+    public string CoordinatesPath => Path.Combine("Data", "Coordinates.json");
 
 
     public ModelSize GetModelSize()

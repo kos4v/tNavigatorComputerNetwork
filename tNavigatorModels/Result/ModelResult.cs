@@ -13,7 +13,7 @@ public class BoreholeData
     public DateTime Date { get; set; }
     public string BoreholeName { get; set; }
     public EnumDataType DataType { get; set; }
-    public List<int> ZCell { get; set; } = new();
+    public List<double> MD { get; set; } = new();
     public List<double> Value { get; set; } = new();
 }
 

@@ -23,6 +23,9 @@ internal class Program
         Console.ReadKey();
         return;
 
+
+
+
         async void Calculate(byte[] message)
         {
             var resultMessage = Encoding.UTF8.GetString(message);
@@ -32,14 +35,12 @@ internal class Program
                 TeamName = project.Team.Name
             };
 
-
             try
             {
                 Log("Calculate");
 
                 var launcher = new Launcher(new LauncherConfig(config.TNavPath, config.ProjectDirPath), project);
                 result = launcher.Start();
-
                 Log("Calculate complete");
             }
             catch (Exception e)
@@ -48,6 +49,7 @@ internal class Program
             }
 
             await SendResult(result, project.ResultAddress);
+            Log("Iteration complete");
         }
 
         async Task SendResult(ModelResult result, string url)
