@@ -19,7 +19,7 @@ namespace tNavigatorModels.Project.Schedule
         public EventSchedule Events { get; set; }
         public static string ResultRootPythonVariable => "root_result_dir";
 
-        public static Dictionary<EnumDataType, string> DebitDirName =
+        public static readonly Dictionary<EnumDataType, string> DebitDirName =
             new()
             {
                 { EnumDataType.TotalDebit, "TotalDebitData" },
