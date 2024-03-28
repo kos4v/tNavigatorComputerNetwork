@@ -16,10 +16,11 @@ namespace tNavigatorLauncher
 
         public NavigatorFileController FileController { get; set; } = new(launcherConfig, project);
 
-        public static void SendTask(BrokerConfig config, Project project)
+        public static async Task SendTask(BrokerConfig config, Project project)
         {
             var calculationBroker = config.GetBroker(BrokerQueue.ModelReadyCalculation);
-            calculationBroker.PublishMessage(JsonUtil.Serialize(project));
+            var data = JsonUtil.Serialize(project);
+            await calculationBroker.PublishMessage(data);
         }
 
 
