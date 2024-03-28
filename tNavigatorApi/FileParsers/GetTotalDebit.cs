@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Globalization;
 using tNavigatorModels;
 using tNavigatorModels.Project.Schedule;
 using tNavigatorModels.Result;
@@ -37,6 +38,9 @@ namespace tNavigatorLauncher.FileParsers
             CoordinateDict ??=
                 JsonUtil.Deserialize<Dictionary<string, Coordinate>>(File.ReadAllText(launcherConfig.CoordinatesPath));
             var debitDir = Path.Combine(launcherConfig.ResultDirPath, Schedule.DebitDirName[dataType]);
+            if (!Directory.Exists(debitDir))
+                return [];
+
             var debitFiles = Directory.GetFiles(debitDir);
 
             var boreholeRows = new List<BoreholeRow>();
@@ -57,13 +61,14 @@ namespace tNavigatorLauncher.FileParsers
                         continue;
 
                     var date = dt.Rows[0][1].ToString()!.Split('-').Select(v => Convert.ToInt16(v)).ToList();
+                    double.TryParse((string)dataRow[3], NumberStyles.Any, CultureInfo.InvariantCulture, out var value);
                     boreholeRows.Add(new BoreholeRow
                     {
                         BoreholeName = dataRow[2].ToString()!.Split(':').First(),
                         Date = new DateTime(date[0], date[1], date[2]),
                         Coordinate = coordinate!,
-                        Value = Math.Round(Convert.ToDouble((string)dataRow[3]), 5),
-                        Order = start++
+                        Value = Math.Round(value, 5),
+                        Order = start++,
                     });
                 }
             }
@@ -72,6 +77,7 @@ namespace tNavigatorLauncher.FileParsers
                 .GroupBy(br => (br.BoreholeName, br.Date))
                 .Select(group => new BoreholeData()
                 {
+                    DataType = dataType,
                     BoreholeName = group.Key.BoreholeName,
                     Date = group.Key.Date,
                     Value = group.OrderBy(c => c.Order).Select(v => v.Value).ToList(),

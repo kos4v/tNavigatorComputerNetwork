@@ -13,9 +13,6 @@ namespace ForTest
     {
         public static string Url => "http://localhost:5105/test?secret=asd";
 
-        public static string TNavExe =>
-            @"C:\Users\KosachevIV\AppData\Local\Programs\RFD\tNavigator\23.4\tNavigator-con.exe";
-
         static void Main(string[] args)
         {
             // Использовать RESTART для продолжения с указанной даты
@@ -42,7 +39,8 @@ namespace ForTest
             const string projectDir = @"C:\Users\KosachevIV\Desktop\tNavTests\modelLaunch";
             const string result = $@"{projectDir}\result.json";
 
-            var launcher = new Launcher(new LauncherConfig(TNavExe, projectDir), GetProject());
+            var navPath = NodeConfig.LoadConfig("config.json").TNavPath;
+            var launcher = new Launcher(new LauncherConfig(navPath, projectDir), GetProject());
 
             var launcherResult = launcher.Start();
             var calculationResultText = JsonSerializer.Serialize(launcherResult);

@@ -1,4 +1,5 @@
 ﻿using MessageBroker;
+using System.Runtime.Serialization;
 using System.Text;
 using tNavigatorLauncher;
 using tNavigatorModels;
@@ -24,8 +25,6 @@ internal class Program
         return;
 
 
-
-
         async void Calculate(byte[] message)
         {
             var resultMessage = Encoding.UTF8.GetString(message);
@@ -34,6 +33,8 @@ internal class Program
             {
                 TeamName = project.Team.Name
             };
+
+            var sendStart = SendResult(project.ResultAddress, "Calculation");
 
             try
             {
@@ -48,24 +49,29 @@ internal class Program
                 Log(result.Report = e.Message + e);
             }
 
-            await SendResult(result, project.ResultAddress);
+            await SendResult(project.ResultAddress, "Received", result);
             Log("Iteration complete");
         }
 
-        async Task SendResult(ModelResult result, string url)
+
+        // status: OilCaseX.Model.Calculation.EnumCalculationStatus
+        // Результаты в очереди: Sent
+        // Расчёт завершён: Received,
+        // Выполняется расчёт: Calculation,
+        // Расчёт отменен: Cancelled,    
+        async Task SendResult(string url, string status, ModelResult? result = null)
         {
-            string jsonPayload = JsonUtil.Serialize(result);
+            var jsonPayload = JsonUtil.Serialize(result);
             using var client = new HttpClient();
             StringContent content = new(jsonPayload, Encoding.UTF8, "application/json");
 
             try
             {
-                //var response = await client.PatchAsync(url, content);
-                var response = client.PatchAsync(url, content).Result;
+                var response = await client.PatchAsync($"{url}&calculationStatus={status}", content);
                 response.EnsureSuccessStatusCode();
-                var res = response.Content.ReadAsStringAsync().Result;
+                var res = await response.Content.ReadAsStringAsync();
 
-                Log($"{await response.Content.ReadAsStringAsync()} {response.StatusCode}");
+                Log($"{res} {response.StatusCode}");
             }
             catch (Exception e)
             {
