@@ -1,5 +1,4 @@
-﻿using System.Data;
-using tNavigatorModels.Project.Schedule;
+﻿using tNavigatorModels.Project.Schedule;
 
 namespace tNavigatorLauncher.FileParsers
 {

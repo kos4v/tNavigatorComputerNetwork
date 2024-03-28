@@ -1,4 +1,7 @@
-﻿namespace tNavigatorModels.Result;
+﻿using System.Text.Json;
+
+namespace tNavigatorModels.Result;
+using CalculationResult = Dictionary<string, Dictionary<DateTime, double>>;
 
 public enum EnumDataType
 {
@@ -21,5 +24,9 @@ public class ModelResult
 {
     public string TeamName { get; set; }
     public List<BoreholeData> BoreholeResults { get; set; } = new();
+    public CalculationResult CalculationResult { get; set; } = new();
     public string? Report { get; set; }
+
+    public void ReadCalculationResult(string data)
+        => CalculationResult = JsonSerializer.Deserialize<CalculationResult>(data)!;
 }

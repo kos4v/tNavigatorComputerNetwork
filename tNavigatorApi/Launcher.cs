@@ -77,11 +77,14 @@ namespace tNavigatorLauncher
 
         public tNavigatorModels.Result.ModelResult ReadCalculationResult()
         {
-            return new tNavigatorModels.Result.ModelResult()
+            var result = new tNavigatorModels.Result.ModelResult()
             {
                 TeamName = project.Team.Name,
-                BoreholeResults = Schedule.DebitDirName.Keys.SelectMany(FileController.GetDebit).ToList()
+                BoreholeResults = Schedule.DebitDirName.Keys.SelectMany(FileController.GetDebit).ToList(),
             };
+            var data = FileController.SmspecUnsmryParser(launcherConfig);
+            result.ReadCalculationResult(data);
+            return result;
         }
     }
 }

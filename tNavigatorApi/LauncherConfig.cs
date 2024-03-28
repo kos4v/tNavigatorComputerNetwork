@@ -1,6 +1,4 @@
-﻿using System.Security.AccessControl;
-
-namespace tNavigatorLauncher;
+﻿namespace tNavigatorLauncher;
 
 public record AxisSize(int Size, int Min, int Max)
 {
@@ -12,6 +10,11 @@ public record ModelSize(AxisSize X, AxisSize Y);
 
 public record LauncherConfig(string TNavigatorConsoleExePath, string ProjectDir)
 {
+    public string ConverterUrl => "http://195.133.145.105:8000/";
+    public string ConverterSmspecUnsmryUrl => $"{ConverterUrl}ResultParse/";
+
+    public string SmspecPath => Directory.GetFiles(ProjectDir, "*.SMSPEC").First();
+    public string UnsmryPath => Directory.GetFiles(ProjectDir, "*.UNSMRY").First();
     public string DataPath => Directory.GetFiles(ProjectDir, "*.data").First();
     public string IncludeDir => Path.Combine(ProjectDir, "INCLUDE");
     public string WellTrackPath => Directory.GetFiles(IncludeDir, "*WELLTRACK.inc").First();
