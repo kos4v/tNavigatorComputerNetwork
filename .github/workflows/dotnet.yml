@@ -24,3 +24,9 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
+    - name: Stop tNavigatorComputingNode.exe
+      run: taskkill /f /im tNavigatorComputingNode.exe
+    - name: Publish
+      run: dotnet publish -c Release /p:PublishProfile=FolderProfile.pubxml
+    - name: Start tNavigatorComputingNode.exe
+      run: Start /b C:\tNavNode\tNavigatorComputingNode.exe
