@@ -18,7 +18,7 @@ jobs:
     - name: Install PowerShell
       uses: efrecon/gh-action-setup-powershell@main
     - name: Stop tNavigatorComputingNode.exe
-      run: pwsh Stop-Process -Name "tNavigatorComputingNode"
+      run: pwsh -Command Stop-Process -Name "tNavigatorComputingNode"
     - uses: actions/checkout@v4
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
