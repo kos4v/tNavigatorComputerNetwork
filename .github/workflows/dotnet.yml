@@ -28,6 +28,8 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Publish
-      run: dotnet publish -c Release /p:PublishProfile=FolderProfile.pubxml
+      run: dotnet publish -c Release -o out
+    - name: Copy dir 
+      run: Copy-Item -Path "out" -Destination "C:\tNavNnode" -Recurse
     - name: Start tNavigatorComputingNode.exe
       run: Start /b C:\tNavNode\tNavigatorComputingNode.exe
