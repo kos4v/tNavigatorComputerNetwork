@@ -42,4 +42,4 @@ jobs:
     - name: Start tNavigatorComputingNode.exe
       run: |
         cd C:\tNavNode
-        pwsh -command start -FilePath  tNavigatorComputingNode.exe -WindowStyle Hidde
+        start -FilePath  tNavigatorComputingNode.exe -WindowStyle Hidde
