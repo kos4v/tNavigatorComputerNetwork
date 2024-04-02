@@ -28,6 +28,6 @@ jobs:
     #   run: dotnet publish -c Release -o out
     - name: Copy dir 
       shell: cmd
-      run: xcopy /s /y .\out\*  c:\tNavNode
+      run: xcopy /E /I .\out\*  C:\tNavNode
     # - name: Start tNavigatorComputingNode.exe
     #   run: Start /b C:\tNavNode\tNavigatorComputingNode.exe
