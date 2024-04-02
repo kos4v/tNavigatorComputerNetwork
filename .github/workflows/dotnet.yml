@@ -13,8 +13,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    # - name: Stop tNavigatorComputingNode.exe
-    #   run: pwsh -Command Stop-Process -Name "tNavC*"
+    - name: Stop tNavigatorComputingNode.exe
+      shell: cmd
+      continue-on-error: true
+      run: taskkill /F /im tNavigatorComputingNode.exe
 
     # - name: Setup .NET
     #   uses: actions/setup-dotnet@v4
@@ -31,4 +33,6 @@ jobs:
       run: xcopy /E /I /Y .\tNavigatorComputingNode\out  C:\tNavNode
     - name: Start tNavigatorComputingNode.exe
       shell: cmd
-      run: Start /b C:\tNavNode\tNavigatorComputingNode.exe
+      run: |
+        cd C:\tNavNode
+        Start /b C:\tNavNode\tNavigatorComputingNode.exe
