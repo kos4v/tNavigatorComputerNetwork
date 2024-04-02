@@ -40,7 +40,6 @@ jobs:
       run: xcopy /E /I /Y .\out  C:\tNavNode
 
     - name: Start tNavigatorComputingNode.exe
-      shell: cmd
       run: |
         cd C:\tNavNode
-        start -FilePath  C:\tNavNode\tNavigatorComputingNode.exe -WindowStyle Hidde
+        pwsh -command start -FilePath  tNavigatorComputingNode.exe -WindowStyle Hidde
