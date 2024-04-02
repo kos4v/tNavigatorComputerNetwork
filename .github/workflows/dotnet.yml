@@ -42,4 +42,4 @@ jobs:
     - name: Start tNavigatorComputingNode.exe
       run: |
         cd C:\tNavNode
-        start -FilePath  tNavigatorComputingNode.exe -WindowStyle Hidde
+        schtasks /run /tn tnav_node
