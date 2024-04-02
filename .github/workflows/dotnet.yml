@@ -16,7 +16,7 @@ jobs:
 
     steps:
     - name: Stop tNavigatorComputingNode.exe
-      run: taskkill /f /im tNavigatorComputingNode.exe
+      run: killall /f /im tNavigatorComputingNode.exe
     - uses: actions/checkout@v4
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
