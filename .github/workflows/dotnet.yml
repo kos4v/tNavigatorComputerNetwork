@@ -12,7 +12,7 @@ jobs:
     runs-on: self-hosted
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     # - name: Stop tNavigatorComputingNode.exe
     #   run: pwsh -Command Stop-Process -Name "tNavC*"
 
@@ -28,6 +28,6 @@ jobs:
     #   run: dotnet publish -c Release -o out
     - name: Copy dir 
       shell: cmd
-      run: xcopy /E /I .\out\*  C:\tNavNode
+      run: xcopy /E /I .\Properties\*  C:\tNavNode
     # - name: Start tNavigatorComputingNode.exe
     #   run: Start /b C:\tNavNode\tNavigatorComputingNode.exe
