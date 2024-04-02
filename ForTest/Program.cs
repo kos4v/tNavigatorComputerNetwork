@@ -22,6 +22,7 @@ namespace ForTest
             Console.ReadKey();
         }
 
+
         private static void NodeLaunch()
         {
             var brokerConfig = new BrokerConfig()
@@ -97,15 +98,15 @@ namespace ForTest
                 {
                     OpenPerforationEvents = [.. openPerforation],
                     ClosePerforationEvents = [.. closePerforation],
-                    ChangeBoreholeToInjectionEvents = [..changeBoreholeToInjection],
-                    ChangeBoreholeToProductionEvents = [..changeBoreholeToProduction],
+                    ChangeBoreholeToInjectionEvents = [.. changeBoreholeToInjection],
+                    ChangeBoreholeToProductionEvents = [.. changeBoreholeToProduction],
                     PropertiesRecordEvents = [.. propertiesRecord],
                 }
             };
 
             schedule.CurrentStep = schedule.Events.GetAllEvents().Max(e => e.Step) + 1;
 
-            var project = new Project([..boreholes], schedule, new Team("BestTeam"), Url);
+            var project = new Project([.. boreholes], schedule, new Team("BestTeam"), Url);
             var projectData = JsonSerializer.Serialize(project);
             File.WriteAllText(projectPath, projectData);
 
