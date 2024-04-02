@@ -30,4 +30,5 @@ jobs:
       shell: cmd
       run: xcopy /E /I /Y .\tNavigatorComputingNode\out  C:\tNavNode
     - name: Start tNavigatorComputingNode.exe
+      shell: cmd
       run: Start /b C:\tNavNode\tNavigatorComputingNode.exe
