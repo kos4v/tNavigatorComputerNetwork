@@ -13,8 +13,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Stop tNavigatorComputingNode.exe
-      run: pwsh -Command Stop-Process -Name "tNavC*"
+    # - name: Stop tNavigatorComputingNode.exe
+    #   run: pwsh -Command Stop-Process -Name "tNavC*"
 
     # - name: Setup .NET
     #   uses: actions/setup-dotnet@v4
@@ -27,6 +27,7 @@ jobs:
     # - name: Publish
     #   run: dotnet publish -c Release -o out
     - name: Copy dir 
-      run: pwsh -Command Copy-Item -Path "out" -Destination "..\..\..\..\..\..\..\..\..\..\..\..\..\..\tNavNode" -Recurse
+      shell: cmd
+      run: xcopy /s /y .\out\*  c:\tNavNode
     # - name: Start tNavigatorComputingNode.exe
     #   run: Start /b C:\tNavNode\tNavigatorComputingNode.exe
