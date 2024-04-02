@@ -16,8 +16,8 @@ jobs:
     # - name: Stop tNavigatorComputingNode.exe
     #   run: pwsh -Command Stop-Process -Name "tNavC*"
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+    # - name: Setup .NET
+    #   uses: actions/setup-dotnet@v4
     #   with:
     #     dotnet-version: 8.0.x
     # - name: Restore dependencies
@@ -28,6 +28,6 @@ jobs:
     #   run: dotnet publish -c Release -o out
     - name: Copy dir 
       shell: cmd
-      run: xcopy /E /I /Y .\tNavigatorComputingNode\out  C:\NavNode
-    # - name: Start tNavigatorComputingNode.exe
-    #   run: Start /b C:\tNavNode\tNavigatorComputingNode.exe
+      run: xcopy /E /I /Y .\tNavigatorComputingNode\out  C:\tNavNode
+    - name: Start tNavigatorComputingNode.exe
+      run: Start /b C:\tNavNode\tNavigatorComputingNode.exe
