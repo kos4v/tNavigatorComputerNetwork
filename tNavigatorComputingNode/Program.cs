@@ -21,7 +21,16 @@ internal class Program
         var brokerForConsumeTask = config.GetBroker(BrokerQueue.ModelReadyCalculation);
 
         brokerForConsumeTask.ConsumeMessageAsync(Calculate);
-        Console.ReadKey();
+        try
+        {
+            Console.ReadKey();
+        }
+        catch (Exception ex) {
+            do {
+                Thread.Sleep(1000);
+            }
+            while (true);
+        };
         return;
 
 
@@ -87,6 +96,10 @@ internal class Program
             File.AppendAllLines("log.txt", [$"---{DateTime.Now}", message, "\n"]);
         }
 
-        Console.WriteLine(message);
+        try
+        { 
+            Console.WriteLine(message);
+        }
+        catch { }
     }
 }
