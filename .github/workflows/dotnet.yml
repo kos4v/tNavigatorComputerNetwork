@@ -23,20 +23,20 @@ jobs:
       with:
         dotnet-version: 8.0.x
     - name: Restore dependencies
-      working-directory: tNavigatorComputerNode
-      run: dotnet restore
+      working-directory: tNavigatorComputingNode
+      run: dotnet restore 
 
     - name: Build
-      working-directory: tNavigatorComputerNode
+      working-directory: tNavigatorComputingNode
       run: dotnet build --no-restore
 
     - name: Publish
-      working-directory: tNavigatorComputerNode
+      working-directory: tNavigatorComputingNode
       run: dotnet publish -c Release -o out
 
     - name: Copy dir 
       shell: cmd
-      working-directory: tNavigatorComputerNode
+      working-directory: tNavigatorComputingNode
       run: xcopy /E /I /Y .\out  C:\tNavNode
 
     - name: Start tNavigatorComputingNode.exe
