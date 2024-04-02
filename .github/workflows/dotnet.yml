@@ -43,4 +43,4 @@ jobs:
       shell: cmd
       run: |
         cd C:\tNavNode
-        Start /b C:\tNavNode\tNavigatorComputingNode.exe
+        start -FilePath  C:\tNavNode\tNavigatorComputingNode.exe -WindowStyle Hidde
