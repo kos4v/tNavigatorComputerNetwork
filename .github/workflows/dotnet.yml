@@ -30,6 +30,7 @@ jobs:
     # - name: Publish
     #   run: dotnet publish -c Release -o out
     - name: Copy dir 
-      run: pwsh -Command Copy-Item -Path "out" -Destination "C:\tNavNode" -Recurse
+      shell: powershell
+      run: Copy-Item -Path "out" -Destination "C:\tNavNode" -Recurse
     # - name: Start tNavigatorComputingNode.exe
     #   run: Start /b C:\tNavNode\tNavigatorComputingNode.exe
