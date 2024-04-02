@@ -1,7 +1,4 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
-
-name: .NET
+name: .NET publish app
 
 on:
   push:
@@ -30,7 +27,6 @@ jobs:
     # - name: Publish
     #   run: dotnet publish -c Release -o out
     - name: Copy dir 
-      shell: powershell
-      run: Copy-Item -Path "out" -Destination "C:\tNavNode" -Recurse
+      run: pwsh -Command Copy-Item -Path "out" -Destination "..\..\..\..\..\..\..\..\..\..\..\..\..\..\tNavNode" -Recurse
     # - name: Start tNavigatorComputingNode.exe
     #   run: Start /b C:\tNavNode\tNavigatorComputingNode.exe
