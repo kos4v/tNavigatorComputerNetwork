@@ -32,7 +32,7 @@ jobs:
 
     - name: Publish
       working-directory: tNavigatorComputingNode
-      run: dotnet publish -c Release -o out
+      run: dotnet publish tNavigatorComputingNode.csproj /p:PublishProfile=FolderProfile.pubxml
 
     - name: Copy dir 
       shell: cmd
