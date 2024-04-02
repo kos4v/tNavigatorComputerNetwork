@@ -17,7 +17,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Stop tNavigatorComputingNode.exe
-      run: pwsh -Command Stop-Process -Name "tNavigatorComputingNode"
+      run: taskkill /f /im tNavigatorComputingNode.exe
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
