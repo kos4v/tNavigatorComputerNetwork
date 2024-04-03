@@ -43,8 +43,9 @@ namespace tNavigatorModels.Project.Schedule
 
             var allLines = File.ReadAllLines(scriptPath).ToList();
 
+            var fullPath = Path.GetFullPath(resultDirPath);
             allLines[allLines.FindIndex(c => c.Contains(ResultRootPythonVariable))]
-                = $"{ResultRootPythonVariable} = '{resultDirPath}'".Replace('\\', '/');
+                = $"{ResultRootPythonVariable} = {fullPath}";
 
             if (!Directory.Exists(scriptPath))
                 Directory.CreateDirectory(scriptsDir);
