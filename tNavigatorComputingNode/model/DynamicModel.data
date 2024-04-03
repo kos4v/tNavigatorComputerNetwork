@@ -1,0 +1,101 @@
+-- Этот файл был сгенерирован тНавигатор v23.4-5689-g1082f6c1238f.
+-- Copyright (C) Рок Флоу Динамикс 2005-2024.
+-- Все права защищены.
+
+-- Model name: 
+-- DynamicModel
+
+-- Project: 
+-- C:/Users/KosachevIV/Desktop/tNavTests/test/Киабейское.snp
+
+
+RUNSPEC
+
+TNAVCTRL
+ LONGNAMES           YES /
+ E1_E3_BINARY_EXPORT ON  /
+ GPU_MODE 4 /
+/
+
+
+TITLE
+DYNAMICMODEL
+
+START
+ 1 JAN 2024 /
+
+
+OIL
+
+
+WATER
+
+
+GAS
+
+
+DISGAS
+
+
+METRIC
+
+
+ENDSCALE
+ /
+
+
+DIMENS
+ 69 50 75 /
+
+
+TABDIMS
+ 1 1 50 50 1* 15 6* 1 /
+
+
+WELLDIMS
+ 21 150 1 21 /
+
+EQLDIMS
+ 1 1* 2 /
+
+
+SMRYDIMS
+ 513 /
+
+
+UNIFOUT
+
+
+GRID
+INCLUDE
+'INCLUDE/DynamicModel_GRID.inc' /
+
+
+EDIT
+INCLUDE
+'INCLUDE/DynamicModel_EDIT.inc' /
+
+
+PROPS
+INCLUDE
+'INCLUDE/DynamicModel_PROPS.inc' /
+
+
+REGIONS
+INCLUDE
+'INCLUDE/DynamicModel_REGIONS.inc' /
+
+
+SOLUTION
+INCLUDE
+'INCLUDE/DynamicModel_SOLUTION.inc' /
+
+
+SUMMARY
+INCLUDE
+'INCLUDE/DynamicModel_SUMMARY.inc' /
+
+
+SCHEDULE
+INCLUDE
+'INCLUDE/DynamicModel_SCHEDULE.inc' /
