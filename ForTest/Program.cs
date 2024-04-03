@@ -43,6 +43,7 @@ namespace ForTest
             var navPath = NodeConfig.LoadConfig("config.json").TNavPath;
             var launcher = new Launcher(new LauncherConfig(navPath, projectDir), GetProject());
 
+
             var launcherResult = launcher.Start();
             var calculationResultText = JsonSerializer.Serialize(launcherResult);
 
