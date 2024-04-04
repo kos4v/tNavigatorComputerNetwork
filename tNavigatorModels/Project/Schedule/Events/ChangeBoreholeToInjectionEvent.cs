@@ -1,4 +1,6 @@
-﻿namespace tNavigatorModels.Project.Schedule.Events
+﻿using static tNavigatorModels.Project.Schedule.Events.EnumBoreholeOperationModes;
+
+namespace tNavigatorModels.Project.Schedule.Events
 {
     public enum EnumControlTypeInjectionBorehole
     {
@@ -30,12 +32,14 @@
         /// <summary> METRIC: barsa </summary>
         public int WellheadPressure { get; set; } = 200;
 
+        public EnumBoreholeOperationModes? BoreholeMode { get; set; } = OPEN;
+
         public string TNavString() =>
             string.Join("\t", [
                 "",
                 $"'{BoreholeName}'",
                 "WATER",
-                "OPEN",
+                $"{(BoreholeMode != null ? "*" : BoreholeMode)}",
                 ToTNavKeyWord(ControlType),
                 LiquidVolume,
                 WellheadPressure,

@@ -2,6 +2,13 @@
 
 namespace tNavigatorModels.Project.Schedule.Events
 {
+    public enum EnumBoreholeOperationModes
+    {
+        SHUT,
+        STOP,
+        OPEN
+    }
+
     public interface IBaseEvent
     {
         public int Step { get; set; }

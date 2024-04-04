@@ -33,12 +33,12 @@
 
         public int Step { get; set; }
         public string EventTNavName => "WCONPROD";
-        public bool IsOpen { get; set; } = true;
+        public EnumBoreholeOperationModes? BoreholeMode { get; set; } = null;
 
         public string TNavString() => string.Join("\t", [
             "",
             BoreholeName,
-            $"{(IsOpen ? "OPEN" : "SHUT")}",
+            $"{(BoreholeMode != null ? "*" : BoreholeMode)}",
             ToTNavKeyWord(ControlTypeProductionBorehole),
             "*",
             "*",
