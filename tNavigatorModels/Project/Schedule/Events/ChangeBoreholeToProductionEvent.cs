@@ -33,11 +33,12 @@
 
         public int Step { get; set; }
         public string EventTNavName => "WCONPROD";
+        public bool IsOpen { get; set; } = true;
 
         public string TNavString() => string.Join("\t", [
             "",
             BoreholeName,
-            "*",
+            $"{(IsOpen ? "OPEN" : "SHUT")}",
             ToTNavKeyWord(ControlTypeProductionBorehole),
             "*",
             "*",
