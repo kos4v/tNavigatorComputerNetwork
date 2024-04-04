@@ -1,4 +1,5 @@
-﻿using MessageBroker;
+﻿using System.Diagnostics;
+using MessageBroker;
 using System.Runtime.Serialization;
 using System.Text;
 using tNavigatorLauncher;
@@ -25,17 +26,22 @@ internal class Program
         {
             Console.ReadKey();
         }
-        catch (Exception ex) {
-            do {
+        catch (Exception ex)
+        {
+            do
+            {
                 Thread.Sleep(1000);
-            }
-            while (true);
-        };
+            } while (true);
+        }
+
+        ;
         return;
 
 
         async void Calculate(byte[] message)
         {
+            var sw = Stopwatch.StartNew();
+
             var resultMessage = Encoding.UTF8.GetString(message);
             var project = JsonUtil.Deserialize<Project>(resultMessage)!;
             var result = new ModelResult()
@@ -51,6 +57,7 @@ internal class Program
 
                 var launcher = new Launcher(new LauncherConfig(config.TNavPath, config.ProjectDirPath), project);
                 result = launcher.Start();
+                result.Report = $"{sw.Elapsed:g}";
                 Log("Calculate complete");
             }
             catch (Exception e)
@@ -97,9 +104,11 @@ internal class Program
         }
 
         try
-        { 
+        {
             Console.WriteLine(message);
         }
-        catch { }
+        catch
+        {
+        }
     }
 }
