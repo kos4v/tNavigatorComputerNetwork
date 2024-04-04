@@ -39,7 +39,7 @@ namespace tNavigatorModels.Project.Schedule.Events
                 "",
                 $"'{BoreholeName}'",
                 "WATER",
-                $"{(BoreholeMode != null ? "*" : BoreholeMode)}",
+                $"{(BoreholeMode == null ? "*" : BoreholeMode)}",
                 ToTNavKeyWord(ControlType),
                 LiquidVolume,
                 WellheadPressure,

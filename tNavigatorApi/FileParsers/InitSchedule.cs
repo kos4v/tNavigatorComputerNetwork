@@ -47,7 +47,8 @@ namespace tNavigatorLauncher.FileParsers
                 // Так же указывает прочий порядок добавление событий
                 foreach (var grouping in (todayEvents ?? []).GroupBy(e => e.EventTNavName).OrderBy(GetPriority))
                 {
-                    AddRange([grouping.Key, .. grouping.Select(e => e.TNavString()), "/", ""]);
+                    string[] dateRange = [grouping.Key, .. grouping.Select(e => e.TNavString()), "/", ""];
+                    AddRange(dateRange);
                 }
             }
 

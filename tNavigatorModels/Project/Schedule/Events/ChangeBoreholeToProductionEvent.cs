@@ -38,7 +38,7 @@
         public string TNavString() => string.Join("\t", [
             "",
             BoreholeName,
-            $"{(BoreholeMode != null ? "*" : BoreholeMode)}",
+            $"{(BoreholeMode == null ? "*" : BoreholeMode)}",
             ToTNavKeyWord(ControlTypeProductionBorehole),
             "*",
             "*",
