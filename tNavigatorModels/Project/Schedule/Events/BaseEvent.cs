@@ -2,6 +2,7 @@
 
 namespace tNavigatorModels.Project.Schedule.Events
 {
+    // Нельзя переименовывать это ключевые слова TNavigator. Всегда заглавными
     public enum EnumBoreholeOperationModes
     {
         SHUT,
