@@ -14,26 +14,38 @@ public enum EnumDataType
 
 public enum EnumPointKeys
 {
-    /// <summary> FlowrateReservoir </summary>
+    /// <summary> Well FlowrateReservoir </summary>
     WVPR = 0,
 
-    /// <summary> FlowrateWater </summary>
+    /// <summary> Well FlowrateWater </summary>
     WWPR = 1,
 
-    /// <summary> FlowrateOil </summary>
+    /// <summary> Well FlowrateOil </summary>
     WOPR = 2,
 
-    /// <summary> FlowrateGas </summary>
+    /// <summary> Well FlowrateGas </summary>
     WGPR = 3,
 
-    /// <summary> FlowrateCondensate </summary>
+    /// <summary> Well FlowrateCondensate </summary>
     FlowrateCondensate = 4,
 
-    /// <summary> PressureBottomhole </summary>
+    /// <summary> Well PressureBottomhole </summary>
     WBHP = 5,
 
-    /// <summary> PressureSupply </summary>
-    WTHP = 6
+    /// <summary> Well PressureSupply </summary>
+    WTHP = 6,
+
+    /// <summary> Full FlowrateResevoir Дебит жидкости для месторождения</summary>
+    FVPR = 7,
+
+    /// <summary> Full FlowrateOil  Дебит нефти для месторождения </summary>
+    FOPR = 8,
+
+    /// <summary> Full FlowrateWater Дебит воды для месторождения</summary>
+    FWPR = 9,
+
+    /// <summary> Full FlowrateGas Дебит газа для месторождения</summary>
+    FGPR = 10,
 }
 
 public record MultiValuePoint(
@@ -65,6 +77,22 @@ public class ModelResult
     public void ReadCalculationResult(string data)
         => CalculationResult = JsonSerializer.Deserialize<CalculationResult>(data)!;
 
+    public MultiValuePoint[] GetPoints()
+    {
+        var result = CalculationResult[$"{EnumPointKeys.FOPR}"].Keys.Select(g =>
+            new MultiValuePoint(
+                g,
+                CalculationResult[$"{EnumPointKeys.FVPR}"][g],
+                CalculationResult[$"{EnumPointKeys.FWPR}"][g],
+                CalculationResult[$"{EnumPointKeys.FOPR}"][g],
+                CalculationResult[$"{EnumPointKeys.FGPR}"][g],
+                0,
+                0,
+                0
+            )).ToArray();
+        return result;
+    }
+
     public MultiValuePoint[] GetPoints(string boreholeName)
     {
         boreholeName = boreholeName.ToUpper();
@@ -87,4 +115,6 @@ public class ModelResult
             ).ToArray();
         return result;
     }
+
+   
 }
