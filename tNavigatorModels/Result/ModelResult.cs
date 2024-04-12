@@ -8,7 +8,8 @@ public enum EnumDataType
     WaterDebit,
     OilDebit,
     GasDebit,
-    TotalDebit
+    TotalDebit,
+    Pressure,
 }
 
 public class BoreholeData

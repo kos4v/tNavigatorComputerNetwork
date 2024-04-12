@@ -9,6 +9,7 @@ total_debit_dir = 'TotalDebitData'
 oil_debit_dir = 'OilDebitData'
 gas_debit_dir = 'GasDebitData'
 water_debit_dir = 'WaterDebitData'
+pressure_debit_dir = 'PressureData'
 
 def re_create_dir(dir_name) -> str:
 	dir_full_path = os.path.join(root_result_dir, dir_name)
@@ -47,6 +48,9 @@ def start_record_files():
 	
 	# save_water_debit_by_perforation()
 	save(water_debit_dir, cwpr)
+	
+	# save_water_debit_by_perforation()
+	save(pressure_debit_dir, cbp)
 	
 
 def start():

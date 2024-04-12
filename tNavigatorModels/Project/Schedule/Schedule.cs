@@ -26,6 +26,7 @@ namespace tNavigatorModels.Project.Schedule
                 { EnumDataType.OilDebit, "OilDebitData" },
                 { EnumDataType.GasDebit, "GasDebitData" },
                 { EnumDataType.WaterDebit, "WaterDebitData" },
+                { EnumDataType.Pressure, "PressureData" },
             };
 
         public static string DateTNavRow(int step) => DateTNavRow(StartDate.AddDays(step));

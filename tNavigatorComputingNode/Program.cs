@@ -33,8 +33,6 @@ internal class Program
                 Thread.Sleep(1000);
             } while (true);
         }
-
-        ;
         return;
 
 
