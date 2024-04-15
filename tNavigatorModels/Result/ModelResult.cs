@@ -101,6 +101,9 @@ public class ModelResult
             .Where(cr => cr.Key.Contains(boreholeName))
             .ToDictionary(pair => pair.Key.Split(':').First(), pair => pair.Value);
 
+        if (!boreholeParamsHistory.ContainsKey($"{EnumPointKeys.WOPR}"))
+            return Array.Empty<MultiValuePoint>();
+
         var result = boreholeParamsHistory[$"{EnumPointKeys.WOPR}"].Keys
             .Select(g =>
                 new MultiValuePoint(
