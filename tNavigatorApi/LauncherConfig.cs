@@ -10,8 +10,8 @@ public record ModelSize(AxisSize X, AxisSize Y);
 
 public record LauncherConfig(string TNavigatorConsoleExePath, string ProjectDir)
 {
-    public string ConverterUrl => "http://195.133.145.105:8000/";
-    public string ConverterSmspecUnsmryUrl => $"{ConverterUrl}ResultParse/";
+    public string ConverterUrl => "http://195.133.145.105:8000";
+    public string ConverterSmspecUnsmryUrl => $"{ConverterUrl}/ResultParse/";
 
     public string SmspecPath => Directory.GetFiles(ProjectDir, "*.SMSPEC").First();
     public string UnsmryPath => Directory.GetFiles(ProjectDir, "*.UNSMRY").First();
