@@ -80,6 +80,9 @@ public class ModelResult
 
     public MultiValuePoint[] GetPoints()
     {
+        if (!CalculationResult.ContainsKey($"{EnumPointKeys.FOPR}"))
+            return [];
+
         var result = CalculationResult[$"{EnumPointKeys.FOPR}"].Keys.Select(g =>
             new MultiValuePoint(
                 g,
@@ -101,6 +104,9 @@ public class ModelResult
             .Where(cr => cr.Key.Contains(boreholeName))
             .ToDictionary(pair => pair.Key.Split(':').First(), pair => pair.Value);
 
+        if (!boreholeParamsHistory.ContainsKey($"{EnumPointKeys.WOPR}"))
+            return [];
+
         var result = boreholeParamsHistory[$"{EnumPointKeys.WOPR}"].Keys
             .Select(g =>
                 new MultiValuePoint(
@@ -116,6 +122,4 @@ public class ModelResult
             ).ToArray();
         return result;
     }
-
-   
 }
