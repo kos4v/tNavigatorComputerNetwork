@@ -55,8 +55,7 @@ internal class Program
                 Log("Calculate");
 
                 var launcher =
-                    new Launcher(new LauncherConfig(project.ConverterAddress, config.TNavPath, config.ProjectDirPath),
-                        project);
+                    new Launcher(new LauncherConfig(config.TNavPath, config.ProjectDirPath, project.ConverterAddress), project);
                 result = launcher.Start();
                 result.Report += $"Time Complete: {sw.Elapsed:g}";
                 Log("Calculate complete");
