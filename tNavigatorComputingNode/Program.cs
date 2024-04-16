@@ -48,7 +48,7 @@ internal class Program
                 TeamName = project.Team.Name
             };
 
-            var sendStart = SendResult(project.ResultAddress, "Calculation");
+            _ = SendResult(project.ResultAddress, "Calculation");
 
             try
             {
