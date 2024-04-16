@@ -43,6 +43,7 @@ public class NodeConfig : BrokerConfig
         [
             "C:\\Program Files\\RFD\\tNavigator",
             "C:\\Program Files (x86)\\RFD\\tNavigator",
+            $"C:\\Users\\{Environment.UserName}\\AppData\\Local\\Programs\\RFD",
             "C:\\Users\\KosachevIV\\AppData\\Local\\Programs\\RFD",
             "C:\\Users\\"
         ];

@@ -6,14 +6,13 @@ namespace tNavigatorModels.Project
 
     public record ConsumeModel(string Url);
 
-    public record Result(
-        string ProjectDirPath,
-        string? Message);
+    public record Result(string ProjectDirPath, string? Message);
 
     public record Project(
         Borehole[] Boreholes,
         Schedule.Schedule Schedule,
         Team Team,
-        string ResultAddress
+        string ResultAddress,
+        string ConverterAddress
     );
 }

@@ -41,7 +41,9 @@ namespace ForTest
             const string result = $@"{projectDir}\result.json";
 
             var navPath = NodeConfig.LoadConfig("config.json").TNavPath;
-            var launcher = new Launcher(new LauncherConfig(navPath, projectDir), GetProject());
+            string converterUrl = "http://195.133.145.105:8000/";
+
+            var launcher = new Launcher(new LauncherConfig(converterUrl, navPath, projectDir), GetProject());
 
 
             var launcherResult = launcher.Start();
@@ -107,7 +109,9 @@ namespace ForTest
 
             schedule.CurrentStep = schedule.Events.GetAllEvents().Max(e => e.Step) + 1;
 
-            var project = new Project([.. boreholes], schedule, new Team("BestTeam"), Url);
+            string converterUrl = "http://195.133.145.105:8000/";
+
+            var project = new Project([.. boreholes], schedule, new Team("BestTeam"), Url, converterUrl);
             var projectData = JsonSerializer.Serialize(project);
             File.WriteAllText(projectPath, projectData);
 
