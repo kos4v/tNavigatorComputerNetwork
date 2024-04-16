@@ -33,6 +33,7 @@ internal class Program
                 Thread.Sleep(1000);
             } while (true);
         }
+
         return;
 
 
@@ -53,7 +54,9 @@ internal class Program
             {
                 Log("Calculate");
 
-                var launcher = new Launcher(new LauncherConfig(config.TNavPath, config.ProjectDirPath), project);
+                var launcher =
+                    new Launcher(new LauncherConfig(project.ConverterAddress, config.TNavPath, config.ProjectDirPath),
+                        project);
                 result = launcher.Start();
                 result.Report += $"Time Complete: {sw.Elapsed:g}";
                 Log("Calculate complete");
