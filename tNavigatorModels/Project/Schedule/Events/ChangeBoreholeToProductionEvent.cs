@@ -36,12 +36,12 @@ namespace tNavigatorModels.Project.Schedule.Events
         public string EventTNavName => "WCONPROD";
         public EnumBoreholeOperationModes? BoreholeMode { get; set; } = null;
 
-        string ControlValue(EnumControlTypeProductionBorehole controlType) => (controlType switch
-        {
-            Debit => ControlType is Debit ? $"{DebitControlVolume}" : "*",
-            WellheadPressure => ControlType is WellheadPressure ? $"{DownholePressureControlValue}" : "*",
-            _ => throw new ArgumentOutOfRangeException(nameof(controlType), controlType, null)
-        }).Replace(',', '.');
+        string ControlValue(EnumControlTypeProductionBorehole controlType) => ((controlType, controlType == ControlType) switch
+            {
+                (Debit, true) => $"{DebitControlVolume}",
+                (WellheadPressure, true) => $"{DownholePressureControlValue}",
+                _ => "*"
+            }).Replace(',', '.');
 
         public string TNavString() => string.Join("\t", [
             "",
