@@ -35,8 +35,7 @@ namespace tNavigatorLauncher.FileParsers
 
         public List<BoreholeData> GetDebit(EnumDataType dataType)
         {
-            CoordinateDict ??=
-                JsonUtil.Deserialize<Dictionary<string, Coordinate>>(File.ReadAllText(launcherConfig.CoordinatesPath));
+            CoordinateDict ??= JsonUtil.Deserialize<Dictionary<string, Coordinate>>(File.ReadAllText(launcherConfig.CoordinatesPath));
             var debitDir = Path.Combine(launcherConfig.ResultDirPath, Schedule.DebitDirName[dataType]);
             if (!Directory.Exists(debitDir))
                 return [];

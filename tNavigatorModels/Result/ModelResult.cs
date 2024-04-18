@@ -49,6 +49,30 @@ public enum EnumPointKeys
     FGPR = 10,
 }
 
+public enum EnumCubeProperty
+{
+    /// <summary> Куб давления </summary>
+    PRESSURE,
+
+    /// <summary> Куб запасов газа в пластовых условиях </summary>
+    RFIPGAS,
+
+    /// <summary> Куб запасов нефти в пластовых условиях </summary>
+    RFIPOIL,
+
+    /// <summary> Куб запасов воды в пластовых условиях </summary>
+    RFIPWAT,
+
+    /// <summary> КУб насыщенности нефтью сеточных блоков  </summary>
+    SOIL,
+
+    /// <summary> КУб насыщенности газом сеточных блоков  </summary>
+    SGAS,
+
+    /// <summary> КУб насыщенности водой сеточных блоков  </summary>
+    SWAT
+}
+
 public record MultiValuePoint(
     DateTime Date,
     double FlowrateReservoir,

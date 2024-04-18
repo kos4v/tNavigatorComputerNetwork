@@ -10,7 +10,7 @@ public record ModelSize(AxisSize X, AxisSize Y);
 
 public record LauncherConfig(string TNavigatorConsoleExePath, string ProjectDir, string converterUrl)
 {
-    public Uri ConverterSmspecUnsmryUrl => new (new Uri(converterUrl), "ResultParse");
+    public Uri ConverterSmspecUnsmryUrl => new(new Uri(converterUrl), "ResultParse");
 
     public string SmspecPath => Directory.GetFiles(ProjectDir, "*.SMSPEC").First();
     public string UnsmryPath => Directory.GetFiles(ProjectDir, "*.UNSMRY").First();
@@ -24,7 +24,7 @@ public record LauncherConfig(string TNavigatorConsoleExePath, string ProjectDir,
     public string ResultDirPath => Path.Combine(ProjectDir, "ResultData");
     public string TNavLaunchArgs => $"--use-gpu \"{DataPath}\" --ecl-rsm --ecl-root -eiru --ignore-lock";
     public string SolutionPath => Directory.GetFiles(IncludeDir, "*SOLUTION.inc").First();
-    public string CoordinatesPath => Path.Combine("Data", "Coordinates.json");
+    public string CoordinatesPath => Path.Combine(ProjectDir, "Coordinates.json");
 
 
     public ModelSize GetModelSize()

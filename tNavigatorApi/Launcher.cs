@@ -35,8 +35,10 @@ namespace tNavigatorLauncher
         public void CreateProjectFiles()
         {
             FileController.ModifyData();
+            FileController.ModifySolution();
             FileController.InitSchedule();
             FileController.InitBoreholes();
+            
             Utils.Dir.ReCreateWorkDir(launcherConfig.ResultDirPath);
         }
 

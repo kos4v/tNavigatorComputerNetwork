@@ -37,14 +37,13 @@ namespace ForTest
 
         private static void LocalLaunch()
         {
-            const string projectDir = @"C:\Users\KosachevIV\Desktop\tNavTests\modelLaunch";
+            const string projectDir = @"C:\Users\KosachevIV\Desktop\tNavTests\Export1";
             const string result = $@"{projectDir}\result.json";
 
             var navPath = NodeConfig.LoadConfig("config.json").TNavPath;
             string converterUrl = "http://195.133.145.105:8000/";
 
-            var launcher = new Launcher(new LauncherConfig(converterUrl, navPath, projectDir), GetProject());
-
+            var launcher = new Launcher(new LauncherConfig(navPath, projectDir, converterUrl), GetProject());
 
             var launcherResult = launcher.Start();
             var calculationResultText = JsonSerializer.Serialize(launcherResult);
