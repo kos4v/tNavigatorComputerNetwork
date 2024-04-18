@@ -12,7 +12,7 @@ namespace tNavigatorLauncher.FileParsers
             string[] cubeNames = ["RFIP", $"{SGAS:G}", $"{SOIL:G}", $"{SWAT:G}"];
 
             modifier.DataText.Add($"RPTRST\r\n {string.Join(" ", cubeNames)} /");
-            modifier.Write(launcherConfig.DataPath);
+            modifier.Write();
         }
     }
 }

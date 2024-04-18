@@ -34,6 +34,6 @@ namespace tNavigatorLauncher.FileParsers
                 DataText.Insert(tagCloseIndex, subTagValue);
         }
 
-        public void Write(string filePath) => File.WriteAllText(filePath, string.Join('\n', DataText));
+        public void Write() => File.WriteAllText(filePath, string.Join('\n', DataText));
     }
 }

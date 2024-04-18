@@ -1,10 +1,7 @@
--- Этот файл был сгенерирован тНавигатор v23.4-5689-g1082f6c1238f.
--- Copyright (C) Рок Флоу Динамикс 2005-2024.
+-- Этот файл был сгенерирован тНавигатор v23.3-4280-ged8ebf643115.
+-- Copyright (C) Рок Флоу Динамикс 2005-2023.
 -- Все права защищены.
 
--- The data used in the model: 
--- Project: RP Project
--- Version: Variant 1
 
 COREYWO
 -- SWL   SWU SWCR SOWCR KROLW KRORW KRWR KRWU PCOW NOW NW  NP SPC0

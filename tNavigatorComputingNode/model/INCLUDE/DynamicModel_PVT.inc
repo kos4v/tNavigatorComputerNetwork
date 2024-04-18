@@ -1,10 +1,7 @@
--- Этот файл был сгенерирован тНавигатор v23.4-5689-g1082f6c1238f.
--- Copyright (C) Рок Флоу Динамикс 2005-2024.
+-- Этот файл был сгенерирован тНавигатор v23.3-4280-ged8ebf643115.
+-- Copyright (C) Рок Флоу Динамикс 2005-2023.
 -- Все права защищены.
 
--- The data used in the model: 
--- Project: PVT Data
--- Version: Вариант 1
 
 PVTO
 -- gor                 pressure           fvf                viscosity
@@ -210,6 +207,11 @@ PVTO
 PVTOPTS
  B1 BMU1 B1 BMU1 /
 
+PVTW
+-- pref fvf   compressibility viscosity viscosibility
+   259  1.039 0.000042497     0.305     /
+
+
 PVDG
 -- pressure           fvf                   viscosity
     10.1325           0.10488132496883644   0.012679573014394609
@@ -232,14 +234,4 @@ PVDG
    314.2244736842105  0.0033820090866465677 0.032712710747699828
    332.11223684210526 0.003199852060109351  0.03526370936230947
    350                0.003036314357847815  0.03807036670007607  /
-
-
-PVTW
--- pref fvf   compressibility viscosity viscosibility
-   259  1.039 0.000042497     0.305     /
-
-
-DENSITY
--- oil water gas  (sc)
-   799 1050  0.98 /
 

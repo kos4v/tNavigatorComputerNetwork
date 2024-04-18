@@ -1,12 +1,12 @@
--- Этот файл был сгенерирован тНавигатор v23.4-5689-g1082f6c1238f.
--- Copyright (C) Рок Флоу Динамикс 2005-2024.
+-- Этот файл был сгенерирован тНавигатор v23.3-4280-ged8ebf643115.
+-- Copyright (C) Рок Флоу Динамикс 2005-2023.
 -- Все права защищены.
 
 -- Model name: 
 -- DynamicModel
 
 -- Project: 
--- C:/Users/KosachevIV/Desktop/tNavTests/test/Киабейское.snp
+-- C:/Users/KosachevIV/Desktop/tNavTests/Original/Киабейское.snp
 
 
 RUNSPEC
@@ -14,7 +14,6 @@ RUNSPEC
 TNAVCTRL
  LONGNAMES           YES /
  E1_E3_BINARY_EXPORT ON  /
- GPU_MODE 4 /
 /
 
 
@@ -22,7 +21,7 @@ TITLE
 DYNAMICMODEL
 
 START
- 1 JAN 2024 /
+ 01 DEC 2023 /
 
 
 OIL
@@ -57,6 +56,7 @@ WELLDIMS
 
 EQLDIMS
  1 1* 2 /
+
 
 VFPPDIMS
  20 20 20 20 1 1 /
@@ -101,3 +101,4 @@ INCLUDE
 SCHEDULE
 INCLUDE
 'INCLUDE/DynamicModel_SCHEDULE.inc' /
+

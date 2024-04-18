@@ -1,5 +1,5 @@
--- Этот файл был сгенерирован тНавигатор v23.4-5689-g1082f6c1238f.
--- Copyright (C) Рок Флоу Динамикс 2005-2024.
+-- Этот файл был сгенерирован тНавигатор v23.3-4280-ged8ebf643115.
+-- Copyright (C) Рок Флоу Динамикс 2005-2023.
 -- Все права защищены.
 
 
@@ -14,15 +14,12 @@ RSVD
     100  200
 /
 
---Name of the property in Model Designer: SGAS 
 INCLUDE
 'INCLUDE/DynamicModel_SGAS.inc' /
 
---Name of the property in Model Designer: SOIL 
 INCLUDE
 'INCLUDE/DynamicModel_SOIL.inc' /
 
---Name of the property in Model Designer: SWAT 
 INCLUDE
 'INCLUDE/DynamicModel_SWAT.inc' /
 

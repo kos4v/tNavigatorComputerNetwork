@@ -9,15 +9,11 @@ namespace tNavigatorLauncher.FileParsers
             var modifier = new Modifier(launcherConfig.DataPath);
 
             modifier.DataText[modifier.FindIndex("START") + 1] = $" {01} {Schedule.MonthConvert(1)} {2024} /";
-            try
-            {
-                modifier.ModifySubTagInTag("TNAVCTRL", "GPU_MODE", " GPU_MODE 4 /");
-            }
-            catch (Exception e)
-            {
-                modifier.DataText.Add($"\r\nTNAVCTRL\r\n GPU_MODE 4 /");
-            }
-            modifier.Write(launcherConfig.DataPath);
+            
+            modifier.ModifySubTagInTag("TNAVCTRL", "GPU_MODE", " GPU_MODE 4 /");
+            
+            
+            modifier.Write();
         }
     }
 }

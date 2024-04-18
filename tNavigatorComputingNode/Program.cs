@@ -64,6 +64,7 @@ internal class Program
             catch (Exception e)
             {
                 Log(result.Report += e.Message + e + $"Time Complete: {sw.Elapsed:g}");
+                throw;
             }
 
             await SendResult(project.ResultAddress, "Received", result);
