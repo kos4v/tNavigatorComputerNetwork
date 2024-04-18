@@ -2,6 +2,7 @@
 using MessageBroker;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Text.Json;
 using tNavigatorLauncher;
 using tNavigatorModels;
 using tNavigatorModels.Project;
@@ -42,7 +43,7 @@ internal class Program
             var sw = Stopwatch.StartNew();
 
             var resultMessage = Encoding.UTF8.GetString(message);
-            var project = JsonUtil.Deserialize<Project>(resultMessage)!;
+            var project = JsonSerializer.Deserialize<Project>(resultMessage)!;
             var result = new ModelResult()
             {
                 TeamName = project.Team.Name
@@ -77,7 +78,7 @@ internal class Program
         // Расчёт отменен: Cancelled,    
         async Task SendResult(string url, string status, ModelResult? result = null)
         {
-            var jsonPayload = JsonUtil.Serialize(result);
+            var jsonPayload = JsonSerializer.Serialize(result);
             using var client = new HttpClient();
             StringContent content = new(jsonPayload, Encoding.UTF8, "application/json");
 

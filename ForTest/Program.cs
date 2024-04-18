@@ -148,7 +148,7 @@ namespace ForTest
                 {
                     Step = step,
                     BoreholeName = name,
-                    ControlTypeProductionBorehole = controlType,
+                    ControlType = controlType,
                     DownholePressureControlValue = value,
                     DebitControlVolume = value
                 });
