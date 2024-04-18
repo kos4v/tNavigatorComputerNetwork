@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using System.Globalization;
+using System.Text.Json;
 using tNavigatorModels;
 using tNavigatorModels.Project.Schedule;
 using tNavigatorModels.Result;
@@ -36,7 +37,7 @@ namespace tNavigatorLauncher.FileParsers
         public List<BoreholeData> GetDebit(EnumDataType dataType)
         {
             CoordinateDict ??=
-                JsonUtil.Deserialize<Dictionary<string, Coordinate>>(File.ReadAllText(launcherConfig.CoordinatesPath));
+                JsonSerializer.Deserialize<Dictionary<string, Coordinate>>(File.ReadAllText(launcherConfig.CoordinatesPath));
             var debitDir = Path.Combine(launcherConfig.ResultDirPath, Schedule.DebitDirName[dataType]);
             if (!Directory.Exists(debitDir))
                 return [];

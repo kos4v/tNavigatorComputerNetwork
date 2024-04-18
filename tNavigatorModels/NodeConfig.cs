@@ -1,4 +1,5 @@
 ﻿using MessageBroker;
+using System.Text.Json;
 
 namespace tNavigatorModels;
 
@@ -28,10 +29,10 @@ public class NodeConfig : BrokerConfig
     public static NodeConfig LoadConfig(string configPath)
     {
         using var r = new StreamReader(configPath);
-        var result = JsonUtil.Deserialize<NodeConfig>(r.ReadToEnd())!;
+        var result = JsonSerializer.Deserialize<NodeConfig>(r.ReadToEnd())!;
         result.TNavPath ??= GetTNavigatorPath(result.PriorityVersion);
         r.Close();
-        File.WriteAllText(configPath, JsonUtil.Serialize(result));
+        File.WriteAllText(configPath, JsonSerializer.Serialize(result));
         return result;
     }
 

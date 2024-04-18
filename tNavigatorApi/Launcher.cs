@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text;
+using System.Text.Json;
 using MessageBroker;
 using tNavigatorLauncher.FileParsers;
 using tNavigatorModels;
@@ -19,7 +20,7 @@ namespace tNavigatorLauncher
         public static async Task SendTask(BrokerConfig config, Project project)
         {
             var calculationBroker = config.GetBroker(BrokerQueue.ModelReadyCalculation);
-            var data = JsonUtil.Serialize(project);
+            var data = JsonSerializer.Serialize(project);
             await calculationBroker.PublishMessage(data);
         }
 
