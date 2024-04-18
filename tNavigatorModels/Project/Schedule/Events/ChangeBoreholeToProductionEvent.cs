@@ -1,4 +1,6 @@
-﻿namespace tNavigatorModels.Project.Schedule.Events
+﻿using static tNavigatorModels.Project.Schedule.Events.EnumControlTypeProductionBorehole;
+
+namespace tNavigatorModels.Project.Schedule.Events
 {
     public enum EnumControlTypeProductionBorehole
     {
@@ -14,16 +16,15 @@
         private static string ToTNavKeyWord(EnumControlTypeProductionBorehole controlTypeProductionBorehole) =>
             controlTypeProductionBorehole switch
             {
-                EnumControlTypeProductionBorehole.Debit => "LRAT",
-                EnumControlTypeProductionBorehole.WellheadPressure => "BHP",
+                Debit => "LRAT",
+                WellheadPressure => "BHP",
                 _ => throw new ArgumentOutOfRangeException(nameof(controlTypeProductionBorehole),
                     controlTypeProductionBorehole, null)
             };
 
         public string BoreholeName { get; set; }
 
-        public EnumControlTypeProductionBorehole ControlTypeProductionBorehole { get; set; } =
-            EnumControlTypeProductionBorehole.WellheadPressure;
+        public EnumControlTypeProductionBorehole ControlType { get; set; } = WellheadPressure;
 
         /// <summary> sm3/day </summary>
         public double DebitControlVolume { get; set; } = 20;
@@ -35,17 +36,24 @@
         public string EventTNavName => "WCONPROD";
         public EnumBoreholeOperationModes? BoreholeMode { get; set; } = null;
 
+        string ControlValue(EnumControlTypeProductionBorehole controlType) => (controlType switch
+        {
+            Debit => ControlType is Debit ? $"{DebitControlVolume}" : "*",
+            WellheadPressure => ControlType is WellheadPressure ? $"{DownholePressureControlValue}" : "*",
+            _ => throw new ArgumentOutOfRangeException(nameof(controlType), controlType, null)
+        }).Replace(',', '.');
+
         public string TNavString() => string.Join("\t", [
             "",
             BoreholeName,
             $"{(BoreholeMode == null ? "*" : BoreholeMode)}",
-            ToTNavKeyWord(ControlTypeProductionBorehole),
+            ToTNavKeyWord(ControlType),
             "*",
             "*",
             "*",
-            $"{DebitControlVolume}".Replace(',', '.'),
+            ControlValue(Debit),
             "*",
-            $"{DownholePressureControlValue}".Replace(',', '.'),
+            ControlValue(WellheadPressure),
             "/"
         ]);
     }
