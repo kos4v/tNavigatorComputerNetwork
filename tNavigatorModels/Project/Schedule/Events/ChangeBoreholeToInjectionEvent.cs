@@ -27,10 +27,10 @@ namespace tNavigatorModels.Project.Schedule.Events
         public EnumControlTypeInjectionBorehole ControlType { get; set; }
 
         /// <summary> METRIC: rm3/day </summary>
-        public int LiquidVolume { get; set; } = 1000000;
+        public double LiquidVolume { get; set; } = 1000000;
 
         /// <summary> METRIC: barsa </summary>
-        public int WellheadPressure { get; set; } = 200;
+        public double WellheadPressure { get; set; } = 200;
 
         public EnumBoreholeOperationModes? BoreholeMode { get; set; } = OPEN;
 
