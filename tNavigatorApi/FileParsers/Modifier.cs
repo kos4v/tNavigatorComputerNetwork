@@ -19,6 +19,12 @@ namespace tNavigatorLauncher.FileParsers
         public void ModifySubTagInTag(string tag, string subTag, string subTagValue)
         {
             var tagIndex = FindIndex(tag);
+
+            if (tagIndex == -1)
+            {
+                DataText.Add($"{tag}\r\n {subTag} {subTagValue} /\r\n /");
+            }
+
             var tagCloseIndex = DataText[tagIndex..].FindIndex(l => l == "/") + tagIndex;
             var subTagIndex = FindMatchIndex(subTag);
 
