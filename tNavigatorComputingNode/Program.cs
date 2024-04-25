@@ -58,12 +58,12 @@ internal class Program
                 var launcher =
                     new Launcher(new LauncherConfig(config.TNavPath, config.ProjectDirPath, project.ConverterAddress), project);
                 result = launcher.Start();
-                result.Report += $"Time Complete: {sw.Elapsed.TotalSeconds} sec";
+                result.Report += $"Time Complete: {sw.Elapsed:g}";
                 Log("Calculate complete");
             }
             catch (Exception e)
             {
-                Log(result.Report += e.Message + e + $"Time Complete: {sw.Elapsed.TotalSeconds} sec");
+                Log(result.Report += e.Message + e + $"Time Complete: {sw.Elapsed:g}");
                 throw;
             }
 
