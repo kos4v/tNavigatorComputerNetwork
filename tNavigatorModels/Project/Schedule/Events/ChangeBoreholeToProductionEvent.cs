@@ -13,33 +13,35 @@ namespace tNavigatorModels.Project.Schedule.Events
 
     public class ChangeBoreholeToProductionEvent() : IBaseEvent
     {
-        private static string ToTNavKeyWord(EnumControlTypeProductionBorehole controlTypeProductionBorehole) =>
+        private static string ToTNavKeyWord(EnumControlTypeProductionBorehole? controlTypeProductionBorehole) =>
             controlTypeProductionBorehole switch
             {
                 Debit => "LRAT",
                 WellheadPressure => "BHP",
-                _ => throw new ArgumentOutOfRangeException(nameof(controlTypeProductionBorehole),
-                    controlTypeProductionBorehole, null)
+                _ => "*"
             };
 
         public string BoreholeName { get; set; }
 
-        public EnumControlTypeProductionBorehole ControlType { get; set; } = WellheadPressure;
+        public EnumControlTypeProductionBorehole? ControlType { get; set; } = WellheadPressure;
 
         /// <summary> sm3/day </summary>
-        public double DebitControlVolume { get; set; } = 20;
+        public double? DebitControlVolume { get; set; } = 20;
 
         /// <summary> barsa </summary>
-        public double DownholePressureControlValue { get; set; } = 200;
+        public double? DownholePressureControlValue { get; set; } = 200;
 
         public int Step { get; set; }
         public string EventTNavName => "WCONPROD";
         public EnumBoreholeOperationModes? BoreholeMode { get; set; } = null;
 
-        string ControlValue(EnumControlTypeProductionBorehole controlType) => ((controlType, controlType == ControlType) switch
+        string ControlValue(EnumControlTypeProductionBorehole? controlType) =>
+            ((controlType, controlType == ControlType) switch
             {
-                (Debit, true) => $"{DebitControlVolume}",
-                (WellheadPressure, true) => $"{DownholePressureControlValue}",
+                (Debit, true) when DebitControlVolume is not null 
+                    => $"{DebitControlVolume}",
+                (WellheadPressure, true) when DownholePressureControlValue is not null 
+                    => $"{DownholePressureControlValue}",
                 _ => "*"
             }).Replace(',', '.');
 

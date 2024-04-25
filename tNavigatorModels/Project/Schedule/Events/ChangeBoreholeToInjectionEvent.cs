@@ -13,18 +13,18 @@ namespace tNavigatorModels.Project.Schedule.Events
 
     public class ChangeBoreholeToInjectionEvent : IBaseEvent
     {
-        private static string ToTNavKeyWord(EnumControlTypeInjectionBorehole controlType) => controlType switch
+        private static string ToTNavKeyWord(EnumControlTypeInjectionBorehole? controlType) => controlType switch
         {
             EnumControlTypeInjectionBorehole.VolumeOfLiquidInjection => "RATE",
             EnumControlTypeInjectionBorehole.WellheadPressure => "BHP",
-            _ => throw new ArgumentOutOfRangeException(nameof(controlType), controlType, null)
+            _ => "*"
         };
 
         public int Step { get; set; }
         public string EventTNavName => "WCONINJE";
         public string BoreholeName { get; set; }
 
-        public EnumControlTypeInjectionBorehole ControlType { get; set; }
+        public EnumControlTypeInjectionBorehole? ControlType { get; set; }
 
         /// <summary> METRIC: rm3/day </summary>
         public double LiquidVolume { get; set; } = 1000000;
