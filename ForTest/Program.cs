@@ -37,7 +37,7 @@ namespace ForTest
 
         private static void LocalLaunch()
         {
-            const string projectDir = @"C:\Users\KosachevIV\Desktop\tNavTests\Export1";
+            const string projectDir = @"C:\Users\KosachevIV\Desktop\tNavTests\ModelLaunch";
             const string result = $@"{projectDir}\result.json";
 
             var navPath = NodeConfig.LoadConfig("config.json").TNavPath;

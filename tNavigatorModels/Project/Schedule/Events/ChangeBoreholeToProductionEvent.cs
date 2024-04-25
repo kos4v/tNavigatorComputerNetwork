@@ -54,6 +54,8 @@ namespace tNavigatorModels.Project.Schedule.Events
             ControlValue(Debit),
             "*",
             ControlValue(WellheadPressure),
+            "*",
+            "22",
             "/"
         ]);
     }
