@@ -14,6 +14,7 @@ public record LauncherConfig(string TNavigatorConsoleExePath, string ProjectDir,
 
     public string SmspecPath => Directory.GetFiles(ProjectDir, "*.SMSPEC").First();
     public string UnsmryPath => Directory.GetFiles(ProjectDir, "*.UNSMRY").First();
+    public string? UnrstPath => Directory.GetFiles(ProjectDir, "*.UNRST").FirstOrDefault();
     public string DataPath => Directory.GetFiles(ProjectDir, "*.data").First();
     public string IncludeDir => Path.Combine(ProjectDir, "INCLUDE");
     public string WellTrackPath => Directory.GetFiles(IncludeDir, "*WELLTRACK.inc").First();

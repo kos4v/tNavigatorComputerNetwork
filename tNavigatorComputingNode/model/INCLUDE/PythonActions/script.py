@@ -24,8 +24,6 @@ def save(dir_path: str, data_object):
 		if data_object is None:
 			return
 		
-		print('data_object', data_object)
-
 		dir_path = re_create_dir(dir_path)
 		file_path = os.path.join(dir_path, f'{int(get_calculated_time())}.csv')
 		df = data_object.to_dataframe()

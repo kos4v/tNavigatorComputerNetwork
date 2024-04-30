@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using MessageBroker;
-using System.Runtime.Serialization;
 using System.Text;
 using System.Text.Json;
 using tNavigatorLauncher;
@@ -19,7 +18,12 @@ internal class Program
         Console.Title = nameof(tNavigatorComputingNode);
         Log("Start");
 
-        var config = NodeConfig.LoadConfig("config.json");
+        string? username = Environment.GetEnvironmentVariable("USERNAME");
+        string configPath = "config.json";
+        if (username == "KosachevIV")
+            configPath = "config.Development.json";
+
+        var config = NodeConfig.LoadConfig(configPath);
         var brokerForConsumeTask = config.GetBroker(BrokerQueue.ModelReadyCalculation);
 
         brokerForConsumeTask.ConsumeMessageAsync(Calculate);
@@ -41,7 +45,7 @@ internal class Program
         async void Calculate(byte[] message)
         {
             var sw = Stopwatch.StartNew();
-
+            LauncherConfig? launcherConfig = null;
             var resultMessage = Encoding.UTF8.GetString(message);
             var project = JsonSerializer.Deserialize<Project>(resultMessage)!;
             var result = new ModelResult()
@@ -54,9 +58,9 @@ internal class Program
             try
             {
                 Log("Calculate");
-
+                launcherConfig = new LauncherConfig(config.TNavPath, config.ProjectDirPath, project.ConverterAddress);
                 var launcher =
-                    new Launcher(new LauncherConfig(config.TNavPath, config.ProjectDirPath, project.ConverterAddress), project);
+                    new Launcher(launcherConfig, project);
                 result = launcher.Start();
                 result.Report += $"Time Complete: {sw.Elapsed:g}";
                 Log("Calculate complete");
@@ -68,6 +72,7 @@ internal class Program
             }
 
             await SendResult(project.ResultAddress, "Received", result);
+            await SendFile(project.ResultAddress, launcherConfig.UnrstPath);
             Log("Iteration complete");
         }
 
@@ -96,6 +101,23 @@ internal class Program
                 Log("Exception: " + e.Message + e);
             }
         }
+
+        async Task SendFile(string url, string? filePath)
+        {
+            if (filePath == null) return;
+
+            using var client = new HttpClient();
+
+            using var httpClient = new HttpClient();
+            using var formData = new MultipartFormDataContent();
+            await using var fileStream = File.OpenRead(filePath);
+            formData.Add(new StreamContent(fileStream), "file", Path.GetFileName(filePath));
+
+            using var response = await httpClient.PostAsync(url, formData);
+
+            string responseContent = await response.Content.ReadAsStringAsync();
+            Console.WriteLine(responseContent);
+        }
     }
 
     public static void Log(string message)
@@ -111,6 +133,7 @@ internal class Program
         }
         catch
         {
+            // ignored
         }
     }
 }

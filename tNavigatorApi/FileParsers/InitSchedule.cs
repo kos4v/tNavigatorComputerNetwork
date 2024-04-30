@@ -44,6 +44,10 @@ namespace tNavigatorLauncher.FileParsers
                 firstEvent ??= todayEvents!.First();
 
                 Add(Schedule.DateTNavString(i));
+                if (todayEvents is null)
+                    continue;
+
+
                 // Schedule.GetEventPriority позволяет объявить перфорации до взаимодействия с ними
                 // Так же указывает прочий порядок добавление событий
                 foreach (var grouping in (todayEvents ?? []).GroupBy(e => e.EventTNavName).OrderBy(GetPriority))
