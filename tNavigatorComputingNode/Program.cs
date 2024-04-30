@@ -103,19 +103,27 @@ internal class Program
 
         async Task SendFile(string url, string? filePath)
         {
+            
             if (filePath == null) return;
 
-            using var client = new HttpClient();
+            try
+            {
+                using var client = new HttpClient();
 
-            using var httpClient = new HttpClient();
-            using var formData = new MultipartFormDataContent();
-            await using var fileStream = File.OpenRead(filePath);
-            formData.Add(new StreamContent(fileStream), "file", Path.GetFileName(filePath));
+                using var httpClient = new HttpClient();
+                using var formData = new MultipartFormDataContent();
+                await using var fileStream = File.OpenRead(filePath);
+                formData.Add(new StreamContent(fileStream), "file", Path.GetFileName(filePath));
 
-            using var response = await httpClient.PostAsync(url, formData);
+                using var response = await httpClient.PostAsync(url, formData);
 
-            string responseContent = await response.Content.ReadAsStringAsync();
-            Console.WriteLine(responseContent);
+                string responseContent = await response.Content.ReadAsStringAsync();
+            }
+            catch (Exception e)
+            {
+                Log("Exception: " + e.Message + e);
+            }
+
         }
     }
 
