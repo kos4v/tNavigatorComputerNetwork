@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Net;
 using MessageBroker;
 using System.Text;
 using System.Text.Json;
@@ -18,9 +19,9 @@ internal class Program
         Console.Title = nameof(tNavigatorComputingNode);
         Log("Start");
 
-        string? username = Environment.GetEnvironmentVariable("USERNAME");
+        var host = Dns.GetHostName();
         string configPath = "config.json";
-        if (username == "KosachevIV")
+        if (host == "W10534")
             configPath = "config.Development.json";
 
         var config = NodeConfig.LoadConfig(configPath);
