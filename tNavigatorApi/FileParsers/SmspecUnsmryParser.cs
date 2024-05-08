@@ -20,11 +20,11 @@
             var response = client.PostAsync(config.ConverterSmspecUnsmryUrl, content).Result;
 
             if (!response.IsSuccessStatusCode)
-                throw new ArgumentException("Ошибка при отправке файлов. Статус: " + response.StatusCode);
+                throw new ArgumentException(
+                    $"Ошибка при отправке файлов. Статус: \n{response.StatusCode}\n{response.Content}");
 
             string responseContent = response.Content.ReadAsStringAsync().Result;
             return responseContent;
-
         }
     }
 }

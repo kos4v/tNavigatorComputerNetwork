@@ -8,6 +8,9 @@ namespace tNavigatorLauncher.FileParsers
         {
             var modifier = new Modifier(launcherConfig.SolutionPath);
 
+            if (modifier.DataText.Contains("RPTRST"))
+                return;
+
             // RFIP - обобщает RFIPGAS, RFIPOIL, RFIPWAT: 
             string[] cubeNames = ["RFIP", $"{SGAS:G}", $"{SOIL:G}", $"{SWAT:G}"];
 

@@ -60,8 +60,7 @@ internal class Program
             {
                 Log("Calculate");
                 launcherConfig = new LauncherConfig(config.TNavPath, config.ProjectDirPath, project.ConverterAddress);
-                var launcher =
-                    new Launcher(launcherConfig, project);
+                var launcher = new Launcher(launcherConfig, project);
                 result = launcher.Start();
                 result.Report += $"Time Complete: {sw.Elapsed:g}";
                 Log("Calculate complete");
@@ -98,7 +97,7 @@ internal class Program
             }
             catch (Exception e)
             {
-                Log("Exception: " + e.Message + e);
+                Log("SendResult Exception: " + e.Message + e);
             }
         }
 
@@ -110,9 +109,9 @@ internal class Program
             try
             {
                 using var client = new HttpClient();
-
                 using var httpClient = new HttpClient();
                 using var formData = new MultipartFormDataContent();
+
                 await using var fileStream = File.OpenRead(filePath);
                 formData.Add(new StreamContent(fileStream), "file", Path.GetFileName(filePath));
 
@@ -122,7 +121,7 @@ internal class Program
             }
             catch (Exception e)
             {
-                Log("Exception: " + e.Message + e);
+                Log("SendFile Exception: " + e.Message + e);
             }
 
         }
