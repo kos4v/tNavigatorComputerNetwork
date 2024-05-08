@@ -22,7 +22,7 @@ public class RabbitMQMessageBroker(
     public string QueueName => queue switch
     {
         BrokerQueue.ModelCalculation => "model-calculation",
-        BrokerQueue.ModelReadyCalculation=> "model-ready-calculation",
+        BrokerQueue.ModelReadyCalculation => "model-ready-calculation",
         BrokerQueue.ModelResult =>
             $"model-result{resultQueueName ?? throw new ArgumentException("if BrokerQueue is ModelResult resultQueueName can't be null")}",
         _ => throw new ArgumentOutOfRangeException(nameof(queue), queue, null)
@@ -50,8 +50,11 @@ public class RabbitMQMessageBroker(
     public CancellationTokenSource ConsumeCancelTokenSource { get; set; } = new();
 
 
-    public Task PublishMessage(string message) =>
-        Task.FromResult(PublishMessage(Encoding.ASCII.GetBytes(message)));
+    public Task PublishMessage(string message)
+    {
+        var messageBytes = Encoding.ASCII.GetBytes(message);
+        return Task.FromResult(PublishMessage(messageBytes));
+    }
 
     public void PurgeQueue()
     {
