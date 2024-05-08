@@ -53,7 +53,6 @@ def start_record_files():
 
 def start():
 	try:
-		print('start')
 		start_record_files()
 	except Exception as e:
 		print(e)
