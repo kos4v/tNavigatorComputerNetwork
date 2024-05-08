@@ -21,8 +21,8 @@ internal class Program
 
         var host = Dns.GetHostName();
         string configPath = "config.json";
-        // if (host == "W10534")
-        //     configPath = "config.Development.json";
+        if (host == "W10534")
+            configPath = "config.Development.json";
 
         var config = NodeConfig.LoadConfig(configPath);
         var brokerForConsumeTask = config.GetBroker(BrokerQueue.ModelReadyCalculation);
