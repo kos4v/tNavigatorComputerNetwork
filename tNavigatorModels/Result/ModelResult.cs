@@ -102,6 +102,7 @@ public class ModelResult
     public void ReadCalculationResult(string data)
         => CalculationResult = JsonSerializer.Deserialize<CalculationResult>(data)!;
 
+    /// <summary>Возврщает значение всех дебитов с точностью в день. По месторождению</summary>
     public MultiValuePoint[] GetPoints()
     {
         if (!CalculationResult.ContainsKey($"{EnumPointKeys.FOPR}"))
@@ -121,6 +122,7 @@ public class ModelResult
         return result;
     }
 
+    /// <summary>Возврщает значение всех дебитов с точностью в день. По скважине</summary>
     public MultiValuePoint[] GetPoints(string boreholeName)
     {
         boreholeName = boreholeName.ToUpper();
