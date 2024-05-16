@@ -67,7 +67,8 @@ internal class Program
             }
             catch (Exception e)
             {
-                Log(result.Report += e.Message + e + $"Time Complete: {sw.Elapsed:g}");
+                Log(result.Report += e.Message + e +
+                                     $"Time Complete: {sw.Elapsed:g} {JsonSerializer.Serialize(launcherConfig)}");
             }
 
             await SendResult(project.ResultAddress, "Received", result);
@@ -103,7 +104,6 @@ internal class Program
 
         async Task SendFile(string url, string? filePath)
         {
-            
             if (filePath == null) return;
 
             try
@@ -123,7 +123,6 @@ internal class Program
             {
                 Log("SendFile Exception: " + e.Message + e);
             }
-
         }
     }
 

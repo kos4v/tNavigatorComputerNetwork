@@ -1,5 +1,9 @@
 ﻿using System.Diagnostics;
+using System.Net;
+using System.Text;
 using System.Text.Json;
+using MessageBroker;
+using Microsoft.Extensions.Hosting;
 using tNavigatorLauncher;
 using tNavigatorModels;
 using tNavigatorModels.Project;
@@ -17,22 +21,22 @@ namespace ForTest
         {
             // Использовать RESTART для продолжения с указанной даты
             var sw = Stopwatch.StartNew();
-            LocalLaunch();
+            //LocalLaunch();
+            NodeLaunch();
             Console.WriteLine(sw.Elapsed);
-            Console.ReadKey();
+            //Console.ReadKey();
         }
 
 
         private static void NodeLaunch()
         {
-            var brokerConfig = new BrokerConfig()
-            {
-                BrokerHostname = "195.133.145.105",
-                BrokerUsername = "guest",
-                BrokerPassword = "J4ntpgFtKTzG84LD"
-            };
+            var configPath = Dns.GetHostName() == "W10534" ? "config.Development.json" : "config.json";
 
-            Launcher.SendTask(brokerConfig, GetProject());
+            Launcher.SendTask(NodeConfig.LoadConfig(configPath), GetProject());
+
+            //IMessageBroker broker = brokerConfig.GetBroker(BrokerQueue.ModelResult);
+            //broker.ConsumeMessageAsync(message => { Console.WriteLine(Encoding.ASCII.GetString(message)); });
+            //Console.ReadKey();
         }
 
         private static void LocalLaunch()
@@ -40,10 +44,10 @@ namespace ForTest
             const string projectDir = @"C:\Users\KosachevIV\Desktop\tNavTests\ModelLaunch";
             const string result = $@"{projectDir}\result.json";
 
-            var navPath = NodeConfig.LoadConfig("config.json").TNavPath;
+            var simulatorPath = NodeConfig.LoadConfig("config.json").TNavPath!;
             string converterUrl = "http://195.133.145.105:8000/";
 
-            var launcher = new Launcher(new LauncherConfig(navPath, projectDir, converterUrl), GetProject());
+            var launcher = new Launcher(new LauncherConfig(simulatorPath, projectDir, converterUrl), GetProject());
 
             var launcherResult = launcher.Start();
             var calculationResultText = JsonSerializer.Serialize(launcherResult);
