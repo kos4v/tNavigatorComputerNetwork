@@ -125,7 +125,6 @@ public class ModelResult
     /// <summary>Возврщает значение всех дебитов с точностью в день. По скважине</summary>
     public MultiValuePoint[] GetPoints(string boreholeName)
     {
-        boreholeName = boreholeName.ToUpper();
         var boreholeParamsHistory = CalculationResult
             .Where(cr => cr.Key.Contains(boreholeName))
             .ToDictionary(pair => pair.Key.Split(':').First(), pair => pair.Value);
