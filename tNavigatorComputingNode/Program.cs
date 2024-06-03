@@ -23,6 +23,8 @@ internal class Program
         string configPath = "config.json";
         if (host == "W10954")
             configPath = "config.Development.json";
+        if (host == "W09531")
+            configPath = "config.BobSafronov.json";
 
         var config = NodeConfig.LoadConfig(configPath);
         var brokerForConsumeTask = config.GetBroker(BrokerQueue.ModelReadyCalculation);
