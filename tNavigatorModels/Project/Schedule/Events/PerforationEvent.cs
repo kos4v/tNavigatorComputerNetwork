@@ -4,10 +4,10 @@ namespace tNavigatorModels.Project.Schedule.Events
 {
     public enum EnumStimulationType
     {
-        //"Обработка призабойной зоны пласта" (ОПЗП) — это "Near-Wellbore Treatment" (NWT).
+        /// <summary> Обработка призабойной зоны пласта" (ОПЗП) — это "Near-Wellbore Treatment" (NWT) </summary>
         NWT = 1,
 
-        // "Гидравлический Разрыв Пласта" (ГРП) — это "Hydraulic Fracturing" (HF).
+        /// <summary> "Гидравлический Разрыв Пласта" (ГРП) — это "Hydraulic Fracturing" (HF). </summary>
         HF = 2
     }
 
@@ -58,6 +58,7 @@ namespace tNavigatorModels.Project.Schedule.Events
     public class StimulationPerforationEvent() : PerforationEvent
     {
         public EnumStimulationType[] TypeOfStimulations { get; set; }
+
         public static double GetStimulationTypeCost(EnumStimulationType stimulationType) => stimulationType switch
         {
             EnumStimulationType.NWT => -2,
@@ -65,6 +66,7 @@ namespace tNavigatorModels.Project.Schedule.Events
             _ => throw new ArgumentOutOfRangeException(nameof(stimulationType), stimulationType, null)
         };
 
-        public override string TNavString() => _tNavArgs(stimulationValue: $"{TypeOfStimulations.Sum(GetStimulationTypeCost)}");
+        public override string TNavString() =>
+            _tNavArgs(stimulationValue: $"{TypeOfStimulations.Sum(GetStimulationTypeCost)}");
     }
 }
