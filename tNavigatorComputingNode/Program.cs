@@ -21,7 +21,7 @@ internal class Program
 
         var host = Dns.GetHostName();
         string configPath = "config.json";
-        if (host == "W10534")
+        if (host == "W10954")
             configPath = "config.Development.json";
 
         var config = NodeConfig.LoadConfig(configPath);

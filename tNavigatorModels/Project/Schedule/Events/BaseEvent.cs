@@ -24,6 +24,7 @@ namespace tNavigatorModels.Project.Schedule.Events
         public OpenPerforationEvent[] OpenPerforationEvents { get; set; } = [];
         public ClosePerforationEvent[] ClosePerforationEvents { get; set; } = [];
         public PropertiesRecordEvent[] PropertiesRecordEvents { get; set; } = [];
+        public StimulationPerforationEvent[] StimulationPerforationEvents { get; set; } = [];
 
 
         public IEnumerable<IBaseEvent> GetAllEvents() => GetType()
