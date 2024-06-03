@@ -16,7 +16,7 @@ public enum EnumDataType
 public enum EnumPointKeys
 {
     /// <summary> Well FlowrateReservoir </summary>
-    WVPR = 0,
+    WLPR = 0,
 
     /// <summary> Well FlowrateWater </summary>
     WWPR = 1,
@@ -125,6 +125,7 @@ public class ModelResult
     /// <summary>Возврщает значение всех дебитов с точностью в день. По скважине</summary>
     public MultiValuePoint[] GetPoints(string boreholeName)
     {
+        //var x = CalculationResult.ToDictionary(p => p.Key, p => p.Value.Values.OrderByDescending(c => c));
         var boreholeParamsHistory = CalculationResult
             .Where(cr => cr.Key.Contains(boreholeName))
             .ToDictionary(pair => pair.Key.Split(':').First(), pair => pair.Value);
@@ -136,7 +137,7 @@ public class ModelResult
             .Select(g =>
                 new MultiValuePoint(
                     g,
-                    boreholeParamsHistory[$"{EnumPointKeys.WVPR}"][g],
+                    boreholeParamsHistory[$"{EnumPointKeys.WLPR}"][g],
                     boreholeParamsHistory[$"{EnumPointKeys.WWPR}"][g],
                     boreholeParamsHistory[$"{EnumPointKeys.WOPR}"][g],
                     boreholeParamsHistory[$"{EnumPointKeys.WGPR}"][g],
