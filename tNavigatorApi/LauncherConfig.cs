@@ -23,7 +23,7 @@ public record LauncherConfig(string TNavigatorConsoleExePath, string ProjectDir,
     public string SchedulePath => Directory.GetFiles(IncludeDir, "*Schedule.inc").First();
     public string ScriptDirPath => Path.Combine(IncludeDir, "PythonActions");
     public string ResultDirPath => Path.Combine(ProjectDir, "ResultData");
-    public string TNavLaunchArgs => $"--use-gpu \"{DataPath}\" --ecl-rsm --ecl-root -eiru --ignore-lock"; 
+    public string TNavLaunchArgs => $"--use-gpu \"{DataPath}\" --ecl-rsm --ecl-root -eiru --ignore-lock";
     public string SolutionPath => Directory.GetFiles(IncludeDir, "*SOLUTION.inc").First();
     public string CoordinatesPath => Path.Combine(ProjectDir, "Coordinates.json");
 
@@ -37,23 +37,36 @@ public record LauncherConfig(string TNavigatorConsoleExePath, string ProjectDir,
             new AxisSize(Convert.ToInt16(gridValues[1]), int.MaxValue, 0));
 
         var lines = File.ReadAllLines(GrdeclPath).ToList();
+        var values = new List<double>();
         foreach (var line in lines.Skip(lines.IndexOf("COORD") + 1))
         {
-            var valuesDouble = TrimSplit(line.Replace('.', ',')).Select(Convert.ToDouble).ToArray();
+            var valuesDouble = TrimSplit(line.Replace('.', ','))
+                .SelectMany(v => v.Contains('*')
+                    ? Enumerable.Range(0, Convert.ToInt32(v.Split('*').First())).Select(_ => v.Split('*').Last())
+                    : [v])
+                .Select(Convert.ToDouble)
+                .ToArray();
 
-            result = new ModelSize(result.X with
-            {
-                Min = (int)new[] { valuesDouble[0], valuesDouble[3], result.X.Min }.Min(),
-                Max = (int)new[] { valuesDouble[0], valuesDouble[3], result.X.Max }.Max()
-            }, result.Y with
-            {
-                Min = (int)new[] { valuesDouble[1], valuesDouble[4], result.Y.Min }.Min(),
-                Max = (int)new[] { valuesDouble[1], valuesDouble[4], result.Y.Max }.Max()
-            });
+            values.AddRange(valuesDouble);
+
 
             if (line.Contains('/'))
                 break;
         }
+
+        for (int i = 0; i < values.Count; i += 6)
+        {
+            result = new ModelSize(result.X with
+            {
+                Min = (int)new[] { values[i + 0], values[i + 3], result.X.Min }.Min(),
+                Max = (int)new[] { values[i + 0], values[i + 3], result.X.Max }.Max()
+            }, result.Y with
+            {
+                Min = (int)new[] { values[i + 1], values[i + 4], result.Y.Min }.Min(),
+                Max = (int)new[] { values[i + 1], values[i + 4], result.Y.Max }.Max()
+            });
+        }
+
 
         return result;
 

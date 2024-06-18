@@ -59,7 +59,7 @@ namespace tNavigatorModels.Project.Schedule.Events
             "*",
             ControlValue(WellheadPressure),
             "*",
-            "22",
+            //"22",
             "/"
         ]);
     }

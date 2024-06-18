@@ -18,7 +18,7 @@ public partial class NavigatorFileController
             "RPTSCHED",
             "'WELLS=2' 'SUMMARY=2' 'fip=3' 'RESTART=1' 'WELSPECS' 'CPU=2' /",
             "",
-            "INCLUDE\r\n'INCLUDE/DynamicModel_VFP.inc' /",
+            //"INCLUDE\r\n'INCLUDE/DynamicModel_VFP.inc' /",
             "INCLUDE",
             $"'INCLUDE/{Path.GetFileName(launcherConfig.WellTrackPath)}' /",
             "",

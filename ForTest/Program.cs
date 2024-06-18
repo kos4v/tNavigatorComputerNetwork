@@ -21,10 +21,10 @@ namespace ForTest
         {
             // Использовать RESTART для продолжения с указанной даты
             var sw = Stopwatch.StartNew();
-            //LocalLaunch();
-            NodeLaunch();
+            LocalLaunch();
+            //NodeLaunch();
             Console.WriteLine(sw.Elapsed);
-            //Console.ReadKey();
+            Console.ReadKey();
         }
 
 
@@ -41,7 +41,7 @@ namespace ForTest
 
         private static void LocalLaunch()
         {
-            const string projectDir = @"C:\Users\KosachevIV\Desktop\tNavTests\ModelLaunch";
+            const string projectDir = @"C:\Users\kosacheviv\Desktop\test\model";
             const string result = $@"{projectDir}\result.json";
 
             var simulatorPath = NodeConfig.LoadConfig("config.json").TNavPath!;
@@ -133,7 +133,7 @@ namespace ForTest
             void AddOpenPerforation(int step, string name) => openPerforation.Add(new()
             {
                 Step = step,
-                StartMD = 2400,
+                StartMD = 1800,
                 EndMD = 2450,
                 BoreholeName = name
             });
@@ -141,7 +141,7 @@ namespace ForTest
             void AddClosePerforation(int step, string name) => closePerforation.Add(new()
             {
                 Step = step,
-                StartMD = 2400,
+                StartMD = 1800,
                 EndMD = 2450,
                 BoreholeName = name
             });
