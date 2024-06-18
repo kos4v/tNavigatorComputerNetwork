@@ -5,20 +5,14 @@
 
 EQUIL
 -- depth  pres depth-wo pres-wo depth-go pres-go rsvd rvvd accuracy
-   2387.5 259  2412     0       2387.5   0       0    /
+   2004.8 260  2004.8   0       0        0       1    /
 
 
 RSVD
--- depth rs
-   -100  100
-    100  200
+-- depth              rs
+   1895.0316498488864 100
+   2095.0316498488864 200
 /
-
-INCLUDE
-'INCLUDE/DynamicModel_SGAS.inc' /
-
-INCLUDE
-'INCLUDE/DynamicModel_SOIL.inc' /
 
 INCLUDE
 'INCLUDE/DynamicModel_SWAT.inc' /

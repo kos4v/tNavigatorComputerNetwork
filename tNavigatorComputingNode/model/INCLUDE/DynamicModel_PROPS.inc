@@ -7,13 +7,13 @@ INCLUDE
 
 
 DENSITY
--- oil water gas  (sc)
-   799 1050  0.98 /
+-- oil water gas   (sc)
+   865 1012  0.976 /
 
 
 ROCK
 -- pressure rock-compres (rock-matrix-compres block-compres porosity Poisson-coef)
-   259      0.00005      /
+   260      0.00005      /
 
 
 STCOND

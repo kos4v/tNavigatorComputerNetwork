@@ -6,7 +6,7 @@
 -- DynamicModel
 
 -- Project: 
--- C:/Users/KosachevIV/Desktop/tNavTests/Original/Киабейское.snp
+-- C:/Users/kosacheviv/Desktop/Хахасия/Для практики.snp
 
 
 RUNSPEC
@@ -21,16 +21,13 @@ TITLE
 DYNAMICMODEL
 
 START
- 01 DEC 2023 /
+ 01 JAN 2024 /
 
 
 OIL
 
 
 WATER
-
-
-GAS
 
 
 DISGAS
@@ -44,25 +41,22 @@ ENDSCALE
 
 
 DIMENS
- 69 50 75 /
+ 25 25 11 /
 
 
 TABDIMS
- 1 1 50 50 1* 15 6* 1 /
+ 1 1 50 50 1* 8 6* 1 /
 
 
 WELLDIMS
- 21 150 1 21 /
+ 6 11 1 6 /
 
 EQLDIMS
  1 1* 2 /
 
 
-VFPPDIMS
- 20 20 20 20 1 1 /
-
 SMRYDIMS
- 513 /
+ 183 /
 
 
 UNIFOUT

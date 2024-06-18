@@ -30,9 +30,6 @@ FAQT
 WOPR
  /
 
-WLPR
- /
-
 WVIR
  /
 

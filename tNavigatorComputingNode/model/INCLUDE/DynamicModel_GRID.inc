@@ -4,7 +4,7 @@
 
 
 SPECGRID
- 69 50 75 /
+ 25 25 11 /
 INCLUDE
 'INCLUDE/DynamicModel.grdecl' /
 
