@@ -1,0 +1,45 @@
+name: .NET publish app
+
+on:
+  push:
+    branches: [ "hakasia/2024" ]
+  schedule:
+    - cron: '10-40 2 * * *'
+
+jobs:
+  build:
+
+    runs-on: hakasia
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Stop tNavigatorComputingNode.exe
+      shell: cmd
+      continue-on-error: true
+      run: taskkill /F /im tNavigatorComputingNode.exe
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Restore dependencies
+      working-directory: tNavigatorComputingNode
+      run: dotnet restore 
+
+    - name: Build
+      working-directory: tNavigatorComputingNode
+      run: dotnet build --no-restore
+
+    - name: Publish
+      working-directory: tNavigatorComputingNode
+      run: dotnet publish tNavigatorComputingNode.csproj /p:PublishProfile=FolderProfile.pubxml
+
+    - name: Copy dir 
+      shell: cmd
+      working-directory: tNavigatorComputingNode
+      run: xcopy /E /I /Y .\out  C:\tNavNode
+
+    - name: Start tNavigatorComputingNode.exe
+      run: |
+        cd C:\tNavNode
+        schtasks /run /tn tnav_node
