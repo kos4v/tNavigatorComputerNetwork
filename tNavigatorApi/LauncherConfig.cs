@@ -10,7 +10,8 @@ public record ModelSize(AxisSize X, AxisSize Y);
 
 public record LauncherConfig(string TNavigatorConsoleExePath, string ProjectDir, string converterUrl)
 {
-    public Uri ConverterSmspecUnsmryUrl => new(new Uri(converterUrl), "ResultParse");
+    public Uri ConverterSmspecUnsmryUrl =>
+        new(new Uri(converterUrl.Contains("http") ? converterUrl : $"http://{converterUrl}"), "ResultParse");
 
     public string SmspecPath => Directory.GetFiles(ProjectDir, "*.SMSPEC").First();
     public string UnsmryPath => Directory.GetFiles(ProjectDir, "*.UNSMRY").First();
