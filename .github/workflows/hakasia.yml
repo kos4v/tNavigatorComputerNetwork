@@ -38,8 +38,9 @@ jobs:
       shell: cmd
       working-directory: tNavigatorComputingNode
       run: xcopy /E /I /Y .\out  C:\tNavNode
-
+    
+    # Необходимо добавить в планировщик задач tnav_node задачу!
     - name: Start tNavigatorComputingNode.exe
       run: |
         cd C:\tNavNode
-        schtasks /run /tn tnav_node.xml
+        schtasks /run /tn tnav_node
