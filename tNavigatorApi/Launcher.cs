@@ -24,7 +24,6 @@ namespace tNavigatorLauncher
             await calculationBroker.PublishMessage(data);
         }
 
-
         public tNavigatorModels.Result.ModelResult Start()
         {
             CreateProjectFiles();
