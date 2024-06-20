@@ -1,4 +1,4 @@
-name: .NET publish app
+name: .NET publish main branch
 
 on:
   push:
