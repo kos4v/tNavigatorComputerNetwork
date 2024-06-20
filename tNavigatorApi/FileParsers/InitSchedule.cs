@@ -53,7 +53,7 @@ public partial class NavigatorFileController
             // Так же указывает прочий порядок добавление событий
             foreach (var grouping in (todayEvents ?? []).GroupBy(e => e.EventTNavName).OrderBy(GetPriority))
             {
-                string[] dateRange = [grouping.Key, .. grouping.Select(e => e.TNavString()), "/", ""];
+                string[] dateRange = [grouping.Key, .. grouping.OrderBy(Schedule.GetEventPriority).Select(e => e.TNavString()), "/", ""];
                 AddRange(dateRange);
             }
         }

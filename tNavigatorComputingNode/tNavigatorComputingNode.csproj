@@ -18,6 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="config.BobSafronov.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="config.Development.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

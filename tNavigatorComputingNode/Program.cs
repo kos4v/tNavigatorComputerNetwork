@@ -20,9 +20,14 @@ internal class Program
         Log("Start");
 
         var host = Dns.GetHostName();
-        string configPath = "config.json";
-        if (host == "W10954")
-            configPath = "config.Development.json";
+        string configPath = host switch
+        {
+            "W10954" => "config.Development.json",
+            "W09531" => "config.json",
+            "W10532" => "config.BobSafronov.json",
+            _ => "config.json"
+        };
+        
 
         var config = NodeConfig.LoadConfig(configPath);
         var brokerForConsumeTask = config.GetBroker(BrokerQueue.ModelReadyCalculation);

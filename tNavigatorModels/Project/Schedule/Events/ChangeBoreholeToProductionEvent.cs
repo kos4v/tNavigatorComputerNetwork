@@ -11,7 +11,7 @@ namespace tNavigatorModels.Project.Schedule.Events
         WellheadPressure
     }
 
-    public class ChangeBoreholeToProductionEvent() : IBaseEvent
+    public class ChangeBoreholeToProductionEvent : IBaseEvent
     {
         private static string ToTNavKeyWord(EnumControlTypeProductionBorehole? controlTypeProductionBorehole) =>
             controlTypeProductionBorehole switch
@@ -21,7 +21,7 @@ namespace tNavigatorModels.Project.Schedule.Events
                 _ => "*"
             };
 
-        public string BoreholeName { get; set; }
+        public required string BoreholeName { get; set; }
 
         public EnumControlTypeProductionBorehole? ControlType { get; set; } = WellheadPressure;
 

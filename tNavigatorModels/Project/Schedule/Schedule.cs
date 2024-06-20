@@ -9,6 +9,7 @@ namespace tNavigatorModels.Project.Schedule
         {
             return classType switch
             {
+                ClosePerforationEvent typeEvent => 1,
                 PerforationEvent typeEvent => 0,
                 _ => 9999
             };
