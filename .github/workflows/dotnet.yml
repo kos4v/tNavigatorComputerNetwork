@@ -11,7 +11,14 @@ on:
 jobs:
   build:
 
-    runs-on: main
+     strategy:
+            fail-fast: true
+            matrix: 
+                # os: [W09966]
+                # ignore W09879, W10806
+                os: [main, W10532]
+                
+    runs-on: ${{matrix.os}}
 
     steps:
     - uses: actions/checkout@v4
