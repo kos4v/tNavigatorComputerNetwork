@@ -23,8 +23,8 @@ internal class Program
         string configPath = host switch
         {
             "W10954" => "config.Development.json",
-            "W09531" => "config.json",
             "W10532" => "config.BobSafronov.json",
+            "W09531" => "config.json",
             _ => "config.json"
         };
         
