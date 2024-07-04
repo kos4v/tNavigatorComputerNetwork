@@ -27,9 +27,14 @@ internal class Program
             "W09531" => "config.json",
             _ => "config.json"
         };
-        
+        switch(host)
+        {
+            case "W09531":
+                return;
+        };
 
-        var config = NodeConfig.LoadConfig(configPath);
+
+    var config = NodeConfig.LoadConfig(configPath);
         var brokerForConsumeTask = config.GetBroker(BrokerQueue.ModelReadyCalculation);
 
         brokerForConsumeTask.ConsumeMessageAsync(Calculate);
