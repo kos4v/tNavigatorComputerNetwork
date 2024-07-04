@@ -20,6 +20,13 @@ namespace tNavigatorModels.Project.Schedule.Events
             _ => "*"
         };
 
+        private string GetControlValue(EnumControlTypeInjectionBorehole? controlType) => (controlType, controlType == ControlType) switch
+        {
+            (EnumControlTypeInjectionBorehole.VolumeOfLiquidInjection, true) => $"{LiquidVolume}",
+            (EnumControlTypeInjectionBorehole.WellheadPressure, true) => $"{WellheadPressure}",
+            _ => "*"
+        };
+
         public int Step { get; set; }
         public string EventTNavName => "WCONINJE";
         public string BoreholeName { get; set; }
@@ -33,7 +40,7 @@ namespace tNavigatorModels.Project.Schedule.Events
         public double WellheadPressure { get; set; } = 200;
 
         public EnumBoreholeOperationModes? BoreholeMode { get; set; } = OPEN;
-
+        
         public string TNavString() =>
             string.Join("\t", [
                 "",
@@ -41,8 +48,8 @@ namespace tNavigatorModels.Project.Schedule.Events
                 "WATER",
                 $"{(BoreholeMode == null ? "*" : BoreholeMode)}",
                 ToTNavKeyWord(ControlType),
-                LiquidVolume,
-                WellheadPressure,
+                GetControlValue(EnumControlTypeInjectionBorehole.VolumeOfLiquidInjection),
+                GetControlValue(EnumControlTypeInjectionBorehole.WellheadPressure),
                 "/"
             ]);
     }
