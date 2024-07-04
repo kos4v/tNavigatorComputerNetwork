@@ -48,6 +48,7 @@ namespace tNavigatorModels.Project.Schedule.Events
                 "WATER",
                 $"{(BoreholeMode == null ? "*" : BoreholeMode)}",
                 ToTNavKeyWord(ControlType),
+                "*",
                 GetControlValue(EnumControlTypeInjectionBorehole.VolumeOfLiquidInjection),
                 GetControlValue(EnumControlTypeInjectionBorehole.WellheadPressure),
                 "/"
