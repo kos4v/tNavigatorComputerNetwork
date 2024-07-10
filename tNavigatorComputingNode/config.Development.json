@@ -1,5 +1,5 @@
 ﻿{
-  "BrokerHostname": "localhost",
+  "BrokerHostname": "192.168.19.232",
   "BrokerUsername": "guest",
   "BrokerPassword": "J4ntpgFtKTzG84LD",
   "PriorityVersion": "23.3",

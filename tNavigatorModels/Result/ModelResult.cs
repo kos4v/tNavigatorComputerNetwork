@@ -140,13 +140,10 @@ public class ModelResult
         /// <summary> gas M3 to condensate tones </summary>
         double GasToCondensate(double gasM3)
         {
-            // the proportion of condensate доля конденста в газе
-            const double condensateProportion = 0.073;
-            
-            // condensate density плотность конденсата г/m3
-            const double condensateDensity = 505;
+            // condensate density доля конденста в газе г/m3
+            const double condensateDensityGrammInM3 = 505;
 
-            var condensateGramms = gasM3 * condensateProportion * condensateDensity;
+            var condensateGramms = gasM3 * condensateDensityGrammInM3;
             var condensateTones = condensateGramms / 1_000_000;
             return condensateTones;
         }
