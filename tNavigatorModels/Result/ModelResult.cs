@@ -192,7 +192,7 @@ public class ModelResult
                     boreholeParamsHistory[$"{EnumPointKeys.WWPR}"][g],
                     boreholeParamsHistory[$"{EnumPointKeys.WOPR}"][g],
                     boreholeParamsHistory[$"{EnumPointKeys.WGPR}"][g],
-                    0,
+                    boreholeParamsHistory[$"{EnumPointKeys.WCPR}"][g],
                     boreholeParamsHistory[$"{EnumPointKeys.WBHP}"][g],
                     boreholeParamsHistory[$"{EnumPointKeys.WTHP}"][g]
                 )
