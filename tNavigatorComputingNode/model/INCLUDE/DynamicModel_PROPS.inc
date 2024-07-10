@@ -1,14 +1,9 @@
--- Этот файл был сгенерирован тНавигатор v23.3-4280-ged8ebf643115.
--- Copyright (C) Рок Флоу Динамикс 2005-2023.
+-- Этот файл был сгенерирован тНавигатор v24.2-3498-g34c7c60ee388.
+-- Copyright (C) Рок Флоу Динамикс 2005-2024.
 -- Все права защищены.
 
 INCLUDE
-'INCLUDE/DynamicModel_PVT.inc' /
-
-
-DENSITY
--- oil water gas  (sc)
-   799 1050  0.98 /
+'INCLUDE/DYNAMICMODEL_PVT.inc' /
 
 
 ROCK
@@ -19,5 +14,5 @@ ROCK
 STCOND
  15.56 1.01325 /
 INCLUDE
-'INCLUDE/DynamicModel_RP.inc' /
+'INCLUDE/DYNAMICMODEL_RP.inc' /
 

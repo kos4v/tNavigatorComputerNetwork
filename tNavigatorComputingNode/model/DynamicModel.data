@@ -1,12 +1,12 @@
--- Этот файл был сгенерирован тНавигатор v23.3-4280-ged8ebf643115.
--- Copyright (C) Рок Флоу Динамикс 2005-2023.
+-- Этот файл был сгенерирован тНавигатор v24.2-3498-g34c7c60ee388.
+-- Copyright (C) Рок Флоу Динамикс 2005-2024.
 -- Все права защищены.
 
 -- Model name: 
 -- DynamicModel
 
 -- Project: 
--- C:/Users/KosachevIV/Desktop/tNavTests/Original/Киабейское.snp
+-- C:/Users/kosacheviv/Desktop/model_by_Antonov/model_dm/dg_new.snp
 
 
 RUNSPEC
@@ -48,7 +48,7 @@ DIMENS
 
 
 TABDIMS
- 1 1 50 50 1* 15 6* 1 /
+ 1 1 50 50 1* 21 6* 1 /
 
 
 WELLDIMS
@@ -59,7 +59,7 @@ EQLDIMS
 
 
 VFPPDIMS
- 20 20 20 20 1 1 /
+ 25 111 219 219 1 2 /
 
 SMRYDIMS
  513 /
@@ -70,35 +70,35 @@ UNIFOUT
 
 GRID
 INCLUDE
-'INCLUDE/DynamicModel_GRID.inc' /
+'INCLUDE/DYNAMICMODEL_GRID.inc' /
 
 
 EDIT
 INCLUDE
-'INCLUDE/DynamicModel_EDIT.inc' /
+'INCLUDE/DYNAMICMODEL_EDIT.inc' /
 
 
 PROPS
 INCLUDE
-'INCLUDE/DynamicModel_PROPS.inc' /
+'INCLUDE/DYNAMICMODEL_PROPS.inc' /
 
 
 REGIONS
 INCLUDE
-'INCLUDE/DynamicModel_REGIONS.inc' /
+'INCLUDE/DYNAMICMODEL_REGIONS.inc' /
 
 
 SOLUTION
 INCLUDE
-'INCLUDE/DynamicModel_SOLUTION.inc' /
+'INCLUDE/DYNAMICMODEL_SOLUTION.inc' /
 
 
 SUMMARY
 INCLUDE
-'INCLUDE/DynamicModel_SUMMARY.inc' /
+'INCLUDE/DYNAMICMODEL_SUMMARY.inc' /
 
 
 SCHEDULE
 INCLUDE
-'INCLUDE/DynamicModel_SCHEDULE.inc' /
+'INCLUDE/DYNAMICMODEL_SCHEDULE.inc' /
 

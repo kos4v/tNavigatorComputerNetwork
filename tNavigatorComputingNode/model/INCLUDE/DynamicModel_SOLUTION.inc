@@ -1,11 +1,6 @@
--- Этот файл был сгенерирован тНавигатор v23.3-4280-ged8ebf643115.
--- Copyright (C) Рок Флоу Динамикс 2005-2023.
+-- Этот файл был сгенерирован тНавигатор v24.2-3498-g34c7c60ee388.
+-- Copyright (C) Рок Флоу Динамикс 2005-2024.
 -- Все права защищены.
-
-
-EQUIL
--- depth  pres depth-wo pres-wo depth-go pres-go rsvd rvvd accuracy
-   2387.5 259  2412     0       2387.5   0       0    /
 
 
 RSVD
@@ -14,12 +9,23 @@ RSVD
     100  200
 /
 
+--Name of the property in Model Designer: PBUB 
 INCLUDE
-'INCLUDE/DynamicModel_SGAS.inc' /
+'INCLUDE/DYNAMICMODEL_PBUB.inc' /
 
+--Name of the property in Model Designer: PRESSURE 
 INCLUDE
-'INCLUDE/DynamicModel_SOIL.inc' /
+'INCLUDE/DYNAMICMODEL_PRESSURE.inc' /
 
+--Name of the property in Model Designer: SGAS 
 INCLUDE
-'INCLUDE/DynamicModel_SWAT.inc' /
+'INCLUDE/DYNAMICMODEL_SGAS.inc' /
+
+--Name of the property in Model Designer: SOIL 
+INCLUDE
+'INCLUDE/DYNAMICMODEL_SOIL.inc' /
+
+--Name of the property in Model Designer: SWAT 
+INCLUDE
+'INCLUDE/DYNAMICMODEL_SWAT.inc' /
 
