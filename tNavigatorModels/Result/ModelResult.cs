@@ -166,7 +166,7 @@ public class ModelResult
                 CalculationResult[$"{EnumPointKeys.FWPR}"][g],
                 CalculationResult[$"{EnumPointKeys.FOPR}"][g],
                 CalculationResult[$"{EnumPointKeys.FGPR}"][g],
-                0,
+                CalculationResult[$"{EnumPointKeys.FCPR}"][g],
                 0,
                 0
             )).ToArray();
