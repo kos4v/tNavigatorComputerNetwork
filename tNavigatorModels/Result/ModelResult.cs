@@ -28,7 +28,7 @@ public enum EnumPointKeys
     WGPR = 3,
 
     /// <summary> Well FlowrateCondensate </summary>
-    FlowrateCondensate = 4,
+    WCPR = 4,
 
     /// <summary> Well PressureBottomhole </summary>
     WBHP = 5,
@@ -47,6 +47,9 @@ public enum EnumPointKeys
 
     /// <summary> Full FlowrateGas Дебит газа для месторождения</summary>
     FGPR = 10,
+
+    /// <summary> Full FlowrateCondensate Дебит Конденсата для месторождения</summary>
+    FCPR = 11,
 }
 
 public enum EnumCubeProperty
@@ -99,8 +102,56 @@ public class ModelResult
     public List<BoreholeData> BoreholeResults { get; set; } = new();
     public CalculationResult CalculationResult { get; set; } = new();
 
-    public void ReadCalculationResult(string data)
-        => CalculationResult = JsonSerializer.Deserialize<CalculationResult>(data)!;
+    public void AddCalculationResult(string data)
+    {
+        CalculationResult = JsonSerializer.Deserialize<CalculationResult>(data)!;
+        AddCondensate();
+    }
+
+    /// <summary>
+    /// Берём дебит газа в млн. м3 / сут умножаем его 
+    /// на конденсато содержание (у нас оно 505 г/м3) 
+    /// и делим на 1_000_000.
+    /// 
+    /// Получаем дебит конденсата в тонн / сут
+    /// потом из тонн в сутки перевести в юниты
+    /// </summary>
+    public void AddCondensate()
+    {
+        ReCalculate("WGPR", "WCPR", GasToCondensate);
+        ReCalculate("FGPR", "FCPR", GasToCondensate);
+        
+        return;
+
+        void ReCalculate(string originKey, string newKey, Func<double, double> transformation)
+        {
+            CalculationResult
+                .Where(pair => pair.Key.Contains(originKey))
+                .ToList()
+                .ForEach(pair =>
+                {
+                    var newName = pair.Key.Replace(originKey, newKey);
+                    CalculationResult[newName] = pair.Value
+                        .OrderBy(p => p.Key)
+                        .ToDictionary(v => v.Key, v => transformation(v.Value));
+                });
+        }
+
+        /// <summary> gas M3 to condensate tones </summary>
+        double GasToCondensate(double gasM3)
+        {
+            // the proportion of condensate доля конденста в газе
+            const double condensateProportion = 0.073;
+            
+            // condensate density плотность конденсата г/m3
+            const double condensateDensity = 505;
+
+            var condensateGramms = gasM3 * condensateProportion * condensateDensity;
+            var condensateTones = condensateGramms / 1_000_000;
+            return condensateTones;
+        }
+    }
+        
 
     /// <summary>Возврщает значение всех дебитов с точностью в день. По месторождению</summary>
     public MultiValuePoint[] GetPoints()

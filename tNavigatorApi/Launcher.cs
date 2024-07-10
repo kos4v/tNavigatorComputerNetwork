@@ -80,13 +80,13 @@ namespace tNavigatorLauncher
 
         public tNavigatorModels.Result.ModelResult ReadCalculationResult()
         {
+            var data = FileController.SmspecUnsmryParser(launcherConfig);
             var result = new tNavigatorModels.Result.ModelResult()
             {
                 TeamName = project.Team.Name,
                 BoreholeResults = Schedule.DebitDirName.Keys.SelectMany(FileController.GetDebit).ToList(),
             };
-            var data = FileController.SmspecUnsmryParser(launcherConfig);
-            result.ReadCalculationResult(data);
+            result.AddCalculationResult(data);
             return result;
         }
     }
