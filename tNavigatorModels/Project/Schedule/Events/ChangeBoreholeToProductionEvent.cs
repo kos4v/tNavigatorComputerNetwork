@@ -45,7 +45,7 @@ namespace tNavigatorModels.Project.Schedule.Events
                 _ => "*"
             }).Replace(',', '.');
 
-        // 22 - номер vfp таблицы, указан в VFPPROD колонка tbl_n (номер 1).
+        // 55 - номер vfp таблицы, указан в VFPPROD колонка tbl_n (номер 1).
         // без vfp таблицы не будет устьевого давления
         public string TNavString() => string.Join("\t", [
             "",
@@ -59,7 +59,7 @@ namespace tNavigatorModels.Project.Schedule.Events
             "*",
             ControlValue(WellheadPressure),
             "*",
-            "22",
+            "55",
             "/"
         ]);
     }

@@ -17,16 +17,25 @@ internal class Program
     static void Main(string[] args)
     {
         Console.Title = nameof(tNavigatorComputingNode);
+
         Log("Start");
 
         var host = Dns.GetHostName();
+
+        const string bobSafronov = "W09531";
+        const string yaroslav = "W10532";
+        const string kos4v = "W10954";
+
         string configPath = host switch
         {
-            "W10954" => "config.Development.json",
-            //"W10532" => "config.BobSafronov.json",
-            "W09531" => "config.json",
+            kos4v => "config.Development.json",
+            //yaroslav => "config.BobSafronov.json",
+            //bobSafronov => "config.Development.json",
             _ => "config.json"
         };
+
+        var config = NodeConfig.LoadConfig(configPath);
+
         //switch(host)
         //{
         //    case "W09531":
@@ -34,24 +43,21 @@ internal class Program
         //};
 
 
-    var config = NodeConfig.LoadConfig(configPath);
-        var brokerForConsumeTask = config.GetBroker(BrokerQueue.ModelReadyCalculation);
+        while (true){
+            try
+            {
+                var brokerForConsumeTask = config.GetBroker(BrokerQueue.ModelReadyCalculation);
 
-        brokerForConsumeTask.ConsumeMessageAsync(Calculate);
-        try
-        {
-            Console.ReadKey();
-        }
-        catch (Exception ex)
-        {
-            do
+                brokerForConsumeTask.ConsumeMessageAsync(Calculate);
+                Console.ReadKey();
+            }
+            catch (Exception ex)
             {
                 Thread.Sleep(1000);
-            } while (true);
+            }
         }
 
         return;
-
 
         async void Calculate(byte[] message)
         {
@@ -103,8 +109,8 @@ internal class Program
                 var response = await client.PatchAsync($"{url}&calculationStatus={status}", content);
                 response.EnsureSuccessStatusCode();
                 var res = await response.Content.ReadAsStringAsync();
-
-                Log($"{res} {response.StatusCode}");
+                
+                Log($"Id: {res}, response status: {response.StatusCode}");
             }
             catch (Exception e)
             {
