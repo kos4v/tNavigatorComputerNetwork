@@ -21,27 +21,24 @@ internal class Program
 
         var host = Dns.GetHostName();
         string configPath = "config.json";
-        if (host == "W10954")
-            configPath = "config.Development.json";
 
         var config = NodeConfig.LoadConfig(configPath);
-        var brokerForConsumeTask = config.GetBroker(BrokerQueue.ModelReadyCalculation);
-
-        brokerForConsumeTask.ConsumeMessageAsync(Calculate);
-        try
+        while (true)
         {
-            Console.ReadKey();
-        }
-        catch (Exception ex)
-        {
-            do
+            try
             {
+                var brokerForConsumeTask = config.GetBroker(BrokerQueue.ModelReadyCalculation);
+                brokerForConsumeTask.ConsumeMessageAsync(Calculate);
+                Console.ReadKey();
+            }
+            catch (Exception ex)
+            {
+                Log($"{ex.Message} {ex}");
                 Thread.Sleep(1000);
-            } while (true);
+            }
         }
 
         return;
-
 
         async void Calculate(byte[] message)
         {
