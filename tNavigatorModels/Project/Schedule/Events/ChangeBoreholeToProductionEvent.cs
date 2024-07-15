@@ -35,13 +35,15 @@ namespace tNavigatorModels.Project.Schedule.Events
         public string EventTNavName => "WCONPROD";
         public EnumBoreholeOperationModes? BoreholeMode { get; set; } = null;
 
+        //TODO Вернуть всё обратно в Бары. DownholePressureControlValue * 10 Это в МПА!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
         string ControlValue(EnumControlTypeProductionBorehole? controlType) =>
             ((controlType, controlType == ControlType) switch
             {
                 (Debit, true) when DebitControlVolume is not null 
                     => $"{DebitControlVolume}",
                 (WellheadPressure, true) when DownholePressureControlValue is not null 
-                    => $"{DownholePressureControlValue}",
+                    => $"{DownholePressureControlValue * 10}",
                 _ => "*"
             }).Replace(',', '.');
 

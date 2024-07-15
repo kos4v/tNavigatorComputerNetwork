@@ -34,6 +34,7 @@ namespace tNavigatorModels.Project.Schedule.Events
 
         public EnumBoreholeOperationModes? BoreholeMode { get; set; } = OPEN;
 
+        //TODO Вернуть всё обратно в Бары. WellheadPressure * 10 - Это в  МПА!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         public string TNavString() =>
             string.Join("\t", [
                 "",
@@ -42,7 +43,7 @@ namespace tNavigatorModels.Project.Schedule.Events
                 $"{(BoreholeMode == null ? "*" : BoreholeMode)}",
                 ToTNavKeyWord(ControlType),
                 LiquidVolume,
-                WellheadPressure,
+                WellheadPressure * 10,
                 "/"
             ]);
     }
