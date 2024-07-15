@@ -127,7 +127,7 @@ public class ModelResult
     {
         //var x = CalculationResult.ToDictionary(p => p.Key, p => p.Value.Values.OrderByDescending(c => c));
         var boreholeParamsHistory = CalculationResult
-            .Where(cr => cr.Key.Contains(boreholeName))
+            .Where(pair => pair.Key.Split(':').Last() == boreholeName)
             .ToDictionary(pair => pair.Key.Split(':').First(), pair => pair.Value);
 
         if (!boreholeParamsHistory.ContainsKey($"{EnumPointKeys.WOPR}"))
