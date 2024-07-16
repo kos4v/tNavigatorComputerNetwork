@@ -18,7 +18,7 @@ internal class Program
     {
         Console.Title = nameof(tNavigatorComputingNode);
 
-        Log("Start");
+        Log("Node is up");
 
         var host = Dns.GetHostName();
 
@@ -74,12 +74,12 @@ internal class Program
 
             try
             {
-                Log("Calculate");
+                Log("Calculate is start");
                 launcherConfig = new LauncherConfig(config.TNavPath, config.ProjectDirPath, project.ConverterAddress);
                 var launcher = new Launcher(launcherConfig, project);
                 result = launcher.Start();
                 result.Report += $"Time Complete: {sw.Elapsed:g}";
-                Log("Calculate complete");
+                Log("Calculate is complete");
             }
             catch (Exception e)
             {
@@ -89,7 +89,8 @@ internal class Program
 
             await SendResult(project.ResultAddress, "Received", result);
             await SendFile(project.ResultAddress, launcherConfig.UnrstPath);
-            Log("Iteration complete");
+            Log("Iteration complete\n");
+            
         }
 
 
@@ -110,7 +111,7 @@ internal class Program
                 response.EnsureSuccessStatusCode();
                 var res = await response.Content.ReadAsStringAsync();
                 
-                Log($"Id: {res}, response status: {response.StatusCode}");
+                Log($"Id: {res}, status: {status}, response: {response.StatusCode}");
             }
             catch (Exception e)
             {
