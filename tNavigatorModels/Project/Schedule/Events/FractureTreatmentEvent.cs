@@ -1,4 +1,6 @@
-﻿namespace tNavigatorModels.Project.Schedule.Events
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace tNavigatorModels.Project.Schedule.Events
 {
 
     /// <param name="AzimuthAngle">от 0 до 360</param>
@@ -18,9 +20,9 @@
 
     public class FractureTreatmentEvent : IBaseEvent
     {
-        public int Step { get; set; }
-        public string BoreholeName { get; set; }
-        public int MD { get; set; }
+        [Required] public int Step { get; set; }
+        [Required] public string BoreholeName { get; set; }
+        [Required] public double MD { get; set; }
         
 
         public string EventTNavName => "FRACTURE_STAGE";
