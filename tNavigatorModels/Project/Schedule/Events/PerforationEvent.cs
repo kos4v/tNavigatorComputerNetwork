@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualBasic.CompilerServices;
+using System.ComponentModel.DataAnnotations;
 
 namespace tNavigatorModels.Project.Schedule.Events
 {
@@ -11,7 +12,7 @@ namespace tNavigatorModels.Project.Schedule.Events
         HF = 2
     }
 
-    public abstract class PerforationEvent() : IBaseEvent
+    public abstract class PerforationEvent : IBaseEvent
     {
         public string BoreholeName { get; set; }
         public int Step { get; set; }
@@ -55,9 +56,9 @@ namespace tNavigatorModels.Project.Schedule.Events
     }
 
     // stimulationValue - skin factor
-    public class StimulationPerforationEvent() : PerforationEvent
+    public class StimulationPerforationEvent : PerforationEvent
     {
-        public EnumStimulationType[] TypeOfStimulations { get; set; }
+        [Required] public EnumStimulationType[] TypeOfStimulations { get; set; }
 
         public static double GetStimulationTypeCost(EnumStimulationType stimulationType) => stimulationType switch
         {
