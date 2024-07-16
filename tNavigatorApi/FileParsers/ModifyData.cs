@@ -11,8 +11,9 @@ namespace tNavigatorLauncher.FileParsers
             modifier.DataText[modifier.FindIndex("START") + 1] = $" {01} {Schedule.MonthConvert(1)} {2024} /";
             
             modifier.ModifySubTagInTag("TNAVCTRL", "GPU_MODE", " GPU_MODE 4 /");
-            
-            
+            modifier.ModifySubTagInTag("TNAVCTRL", "FRACTURE_BUILD_LOGIC", " FRACTURE_BUILD_LOGIC USE_VIRTUAL_CONNECTIONS /");
+
+
             modifier.Write();
         }
     }

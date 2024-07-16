@@ -5,8 +5,12 @@
 
 SPECGRID
  69 50 75 /
+
 INCLUDE
 'INCLUDE/DynamicModel.grdecl' /
+
+INCLUDE
+'INCLUDE/DynamicModel_WELLTRACK.inc' /
 
 
 INIT
@@ -26,3 +30,7 @@ INCLUDE
 INCLUDE
 'INCLUDE/DynamicModel_PORO.inc' /
 
+FRACTURE_ARITHMETIC
+    'ARITHMETIC_one' /
+        PERMX (zone : ALL) = LINEAR_VERTICAL (100, 1) /
+/

@@ -17,16 +17,25 @@ internal class Program
     static void Main(string[] args)
     {
         Console.Title = nameof(tNavigatorComputingNode);
-        Log("Start");
+
+        Log("Node is up");
 
         var host = Dns.GetHostName();
+
+        const string bobSafronov = "W09531";
+        const string yaroslav = "W10532";
+        const string kos4v = "W10954";
+
         string configPath = host switch
         {
-            "W10954" => "config.Development.json",
-            "W10532" => "config.Development.json",
-            "W09531" => "config.json",
+            kos4v => "config.Development.json",
+            //yaroslav => "config.BobSafronov.json",
+            //bobSafronov => "config.Development.json",
             _ => "config.json"
         };
+
+        var config = NodeConfig.LoadConfig(configPath);
+
         //switch(host)
         //{
         //    case "W09531":
@@ -34,24 +43,21 @@ internal class Program
         //};
 
 
-    var config = NodeConfig.LoadConfig(configPath);
-        var brokerForConsumeTask = config.GetBroker(BrokerQueue.ModelReadyCalculation);
+        while (true){
+            try
+            {
+                var brokerForConsumeTask = config.GetBroker(BrokerQueue.ModelReadyCalculation);
 
-        brokerForConsumeTask.ConsumeMessageAsync(Calculate);
-        try
-        {
-            Console.ReadKey();
-        }
-        catch (Exception ex)
-        {
-            do
+                brokerForConsumeTask.ConsumeMessageAsync(Calculate);
+                Console.ReadKey();
+            }
+            catch (Exception ex)
             {
                 Thread.Sleep(1000);
-            } while (true);
+            }
         }
 
         return;
-
 
         async void Calculate(byte[] message)
         {
@@ -68,12 +74,12 @@ internal class Program
 
             try
             {
-                Log("Calculate");
+                Log("Calculate is start");
                 launcherConfig = new LauncherConfig(config.TNavPath, config.ProjectDirPath, project.ConverterAddress);
                 var launcher = new Launcher(launcherConfig, project);
                 result = launcher.Start();
                 result.Report += $"Time Complete: {sw.Elapsed:g}";
-                Log("Calculate complete");
+                Log("Calculate is complete");
             }
             catch (Exception e)
             {
@@ -83,7 +89,8 @@ internal class Program
 
             await SendResult(project.ResultAddress, "Received", result);
             await SendFile(project.ResultAddress, launcherConfig.UnrstPath);
-            Log("Iteration complete");
+            Log("Iteration complete\n");
+            
         }
 
 
@@ -103,8 +110,8 @@ internal class Program
                 var response = await client.PatchAsync($"{url}&calculationStatus={status}", content);
                 response.EnsureSuccessStatusCode();
                 var res = await response.Content.ReadAsStringAsync();
-
-                Log($"{res} {response.StatusCode}");
+                
+                Log($"Id: {res}, status: {status}, response: {response.StatusCode}");
             }
             catch (Exception e)
             {
