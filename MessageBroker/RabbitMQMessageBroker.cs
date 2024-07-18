@@ -141,7 +141,6 @@ public class RabbitMQMessageBroker(
             arguments: null);
 
         var consumer = new EventingBasicConsumer(channel);
-
         consumer.Received += (_, e) =>
         {
             job(e.Body.ToArray());
@@ -155,4 +154,5 @@ public class RabbitMQMessageBroker(
 
         while (!ConsumeCancellationToken.IsCancellationRequested) await Task.Delay(1000);
     }
+
 }

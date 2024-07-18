@@ -7,18 +7,19 @@ using tNavigatorLauncher;
 using tNavigatorModels;
 using tNavigatorModels.Project;
 using tNavigatorModels.Result;
+using Utils;
+using System;
 
 namespace tNavigatorComputingNode;
 
-internal class Program
+public class Program
 {
-    public static object LockObject { get; set; } = new();
 
     static void Main(string[] args)
     {
         Console.Title = nameof(tNavigatorComputingNode);
 
-        Log("Node is up");
+        Log.Write("Node is up\n");
 
         var host = Dns.GetHostName();
 
@@ -30,36 +31,29 @@ internal class Program
         {
             kos4v => "config.Development.json",
             //yaroslav => "config.BobSafronov.json",
-            //bobSafronov => "config.Development.json",
+            bobSafronov => "config.Development.json",
             _ => "config.json"
         };
-
         var config = NodeConfig.LoadConfig(configPath);
-
-        //switch(host)
-        //{
-        //    case "W09531":
-        //        return;
-        //};
-
+        IMessageBroker? brokerForConsumeTask = null;
 
         while (true){
             try
             {
-                var brokerForConsumeTask = config.GetBroker(BrokerQueue.ModelReadyCalculation);
-
-                brokerForConsumeTask.ConsumeMessageAsync(Calculate);
-                Console.ReadKey();
+                brokerForConsumeTask?.ConsumeCancelTokenSource.Cancel();
+                brokerForConsumeTask = config.GetBroker(BrokerQueue.ModelReadyCalculation);
+                brokerForConsumeTask.ConsumeMessageAsync(Calculate).Wait();
             }
             catch (Exception ex)
             {
-                Thread.Sleep(1000);
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex);
             }
         }
 
         return;
 
-        async void Calculate(byte[] message)
+        void Calculate(byte[] message)
         {
             var sw = Stopwatch.StartNew();
             LauncherConfig? launcherConfig = null;
@@ -70,93 +64,109 @@ internal class Program
                 TeamName = project.Team.Name
             };
 
-            _ = SendResult(project.ResultAddress, "Calculation");
-
+            
             try
             {
-                Log("Calculate is start");
                 launcherConfig = new LauncherConfig(config.TNavPath, config.ProjectDirPath, project.ConverterAddress);
                 var launcher = new Launcher(launcherConfig, project);
-                result = launcher.Start();
+                var resultTask = Task.Run(launcher.Start);
+                Log.Write($"Calculate is start {project.ResultAddress.Split("?").First()}");
+
+
+                while (CaseIsLive(project.ResultAddress) & !resultTask.IsCompleted)
+                {
+                    Thread.Sleep(1000);
+                }
+                if (!resultTask.IsCompleted)
+                {
+                    Log.Write($"Calculate is cancelled\n");
+                    return;
+                }
+
+                result = resultTask.Result;
                 result.Report += $"Time Complete: {sw.Elapsed:g}";
-                Log("Calculate is complete");
+
+                Attempt(() => SendResult(project.ResultAddress, "Received", result));
+                Attempt(() => SendFile(project.ResultAddress, launcherConfig.UnrstPath));
+                Log.Write("Calculate is complete");
             }
             catch (Exception e)
             {
-                Log(result.Report += e.Message + e +
+                Log.Write(result.Report += e.Message + e +
                                      $"Time Complete: {sw.Elapsed:g} {JsonSerializer.Serialize(launcherConfig)}");
             }
 
-            await SendResult(project.ResultAddress, "Received", result);
-            await SendFile(project.ResultAddress, launcherConfig.UnrstPath);
-            Log("Iteration complete\n");
+            Log.Write("Iteration complete\n");
             
         }
 
+        bool CaseIsLive(string url)
+        {
+            using var client = new HttpClient();
+            using var response = client.GetAsync($"{url}&onlyStatus=true").Result;
+
+            var res = response.Content.ReadAsStringAsync().Result;
+
+            //Log.Write($"Response: {response.StatusCode}, id: {res}");
+            string responseContent = response.Content.ReadAsStringAsync().Result;
+            var result = !responseContent.ToLower().Contains("cancel");
+            return result;
+        }
 
         // status: OilCaseX.Model.Calculation.EnumCalculationStatus
         // Результаты в очереди: Sent
         // Расчёт завершён: Received,
         // Выполняется расчёт: Calculation,
         // Расчёт отменен: Cancelled,    
-        async Task SendResult(string url, string status, ModelResult? result = null)
+        HttpStatusCode SendResult(string url, string status, ModelResult? result = null)
         {
             var jsonPayload = JsonSerializer.Serialize(result);
             using var client = new HttpClient();
             StringContent content = new(jsonPayload, Encoding.UTF8, "application/json");
 
-            try
-            {
-                var response = await client.PatchAsync($"{url}&calculationStatus={status}", content);
-                response.EnsureSuccessStatusCode();
-                var res = await response.Content.ReadAsStringAsync();
-                
-                Log($"Id: {res}, status: {status}, response: {response.StatusCode}");
-            }
-            catch (Exception e)
-            {
-                Log("SendResult Exception: " + e.Message + e);
-            }
+            using var response = client.PatchAsync($"{url}&calculationStatus={status}", content).Result;
+            var res = response.Content.ReadAsStringAsync().Result;
+            Log.Write($"Status: {status}, response: {response.StatusCode}, id: {res}");
+
+            return response.StatusCode;
         }
 
-        async Task SendFile(string url, string? filePath)
+        HttpStatusCode? SendFile(string url, string? filePath)
         {
-            if (filePath == null) return;
+            if (filePath == null) return null;
 
-            try
+            using var httpClient = new HttpClient();
+            using var formData = new MultipartFormDataContent();
+
+            using var fileStream = File.OpenRead(filePath);
+            formData.Add(new StreamContent(fileStream), "file", Path.GetFileName(filePath));
+
+            using var response = httpClient.PostAsync(url, formData).Result;
+            string responseContent = response.Content.ReadAsStringAsync().Result;
+
+            return response.StatusCode;
+        }
+
+        T Attempt<T>(Func<T> action, int attemptCount = 5, int sleepTimeMS = 5000)
+        {
+            string? errorMessage = null;
+
+            while (attemptCount > 0)
             {
-                using var client = new HttpClient();
-                using var httpClient = new HttpClient();
-                using var formData = new MultipartFormDataContent();
-
-                await using var fileStream = File.OpenRead(filePath);
-                formData.Add(new StreamContent(fileStream), "file", Path.GetFileName(filePath));
-
-                using var response = await httpClient.PostAsync(url, formData);
-
-                string responseContent = await response.Content.ReadAsStringAsync();
+                try
+                {
+                    return action();
+                }
+                catch (Exception e)
+                {
+                    attemptCount--;
+                    errorMessage = "!!! SendFile Exception: \n" + e.Message + e;
+                    Thread.Sleep(sleepTimeMS);
+                }
             }
-            catch (Exception e)
-            {
-                Log("SendFile Exception: " + e.Message + e);
-            }
+         
+            return action();
         }
     }
 
-    public static void Log(string message)
-    {
-        lock (LockObject)
-        {
-            File.AppendAllLines("log.txt", [$"---{DateTime.Now}", message, "\n"]);
-        }
-
-        try
-        {
-            Console.WriteLine(message);
-        }
-        catch
-        {
-            // ignored
-        }
-    }
 }

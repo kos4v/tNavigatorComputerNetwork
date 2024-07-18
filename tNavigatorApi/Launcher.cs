@@ -6,6 +6,7 @@ using tNavigatorLauncher.FileParsers;
 using tNavigatorModels;
 using tNavigatorModels.Project;
 using tNavigatorModels.Project.Schedule;
+using Utils;
 
 
 namespace tNavigatorLauncher
@@ -40,7 +41,7 @@ namespace tNavigatorLauncher
             FileController.InitSchedule();
             FileController.InitBoreholes();
             
-            Utils.Dir.ReCreateWorkDir(launcherConfig.ResultDirPath);
+            Dir.ReCreateWorkDir(launcherConfig.ResultDirPath);
         }
 
         /// <returns> Calculation result directory </returns>
@@ -82,12 +83,14 @@ namespace tNavigatorLauncher
 
                     process.Start();
                     Output = process.StandardOutput.ReadToEnd();
-
                     process.WaitForExit();
                 }
 
                 if (!string.IsNullOrEmpty(Output))
-                    Console.WriteLine(Output);
+                {
+                    Log.Write(Output, false);
+                }
+
             }
             catch (Exception ex)
             {

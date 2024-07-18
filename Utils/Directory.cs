@@ -107,8 +107,26 @@ namespace Utils
         public static void ReCreateWorkDir(string path)
         {
             if (Directory.Exists(path))
-                Directory.Delete(path, true);
+            {
+                int attempt = 10;
+                while (true)
+                {
+                    try
+                    {
+                        Directory.Delete(path, true);
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        Thread.Sleep(2000);
+                        if(attempt-- < 0)
+                        {
+                            throw;
+                        }
+                    }
 
+                }
+            }
             Directory.CreateDirectory(path);
         }
     }

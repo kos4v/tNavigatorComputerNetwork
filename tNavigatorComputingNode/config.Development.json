@@ -2,6 +2,6 @@
   "BrokerHostname": "192.168.19.232",
   "BrokerUsername": "guest",
   "BrokerPassword": "J4ntpgFtKTzG84LD",
-  "PriorityVersion": "24.2",
+  "PriorityVersion": "23.3",
   "ProjectDirPath": "model"
 }
