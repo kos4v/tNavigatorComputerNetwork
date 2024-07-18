@@ -31,7 +31,7 @@ public class Program
         {
             kos4v => "config.Development.json",
             //yaroslav => "config.BobSafronov.json",
-            bobSafronov => "config.Development.json",
+            //bobSafronov => "config.Development.json",
             _ => "config.json"
         };
         var config = NodeConfig.LoadConfig(configPath);
