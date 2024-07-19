@@ -69,7 +69,7 @@ namespace tNavigatorLauncher
                 }
 
                 if (!string.IsNullOrEmpty(Output))
-                    Console.WriteLine(Output);
+                    Console.WriteLine(Output.TakeLast(5000));
             }
             catch (Exception ex)
             {
