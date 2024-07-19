@@ -1,7 +1,7 @@
 ﻿{
-  "BrokerHostname": "localhost",
+  "BrokerHostname": "192.168.19.32",
   "BrokerUsername": "guest",
   "BrokerPassword": "J4ntpgFtKTzG84LD",
-  "PriorityVersion": "22.4",
+  "PriorityVersion": "23.3",
   "ProjectDirPath": "model"
 }
