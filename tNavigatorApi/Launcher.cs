@@ -79,14 +79,25 @@ namespace tNavigatorLauncher
                         }
                     };
 
-                    process.Start();
-                    Output = process.StandardOutput.ReadToEnd();
+                    var cursorPosition = Console.GetCursorPosition();
 
+                    process.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>                     {
+                         if (!string.IsNullOrEmpty(e.Data))
+                         {
+                            Console.SetCursorPosition(cursorPosition.Left, cursorPosition.Top);
+                            Console.WriteLine(e.Data);
+                        }
+                    });
+
+                    process.Start();
+                    process.BeginOutputReadLine();
+                    //Output = process.StandardOutput.ReadToEnd();
                     process.WaitForExit();
                 }
 
-                if (!string.IsNullOrEmpty(Output))
-                    Console.WriteLine(Output.TakeLast(5000));
+                //if (!string.IsNullOrEmpty(Output))
+                //    Console.WriteLine(Output.TakeLast(5000));
+                Console.WriteLine("Finish calculate");
             }
             catch (Exception ex)
             {
