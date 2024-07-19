@@ -1,7 +1,7 @@
-﻿using System.Diagnostics;
+﻿using MessageBroker;
+using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
-using MessageBroker;
 using tNavigatorLauncher.FileParsers;
 using tNavigatorModels;
 using tNavigatorModels.Project;
@@ -81,14 +81,14 @@ namespace tNavigatorLauncher
 
                     var cursorPosition = Console.GetCursorPosition();
 
-                    process.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>                     {
-                         if (!string.IsNullOrEmpty(e.Data))
-                         {
+                    process.OutputDataReceived += (sender, e) =>                     {
+                        if (!string.IsNullOrEmpty(e.Data))
+                        {
                             Console.SetCursorPosition(cursorPosition.Left, cursorPosition.Top);
                             Console.Write(new string(' ', Console.WindowWidth));
                             Console.WriteLine(e.Data);
                         }
-                    });
+                    };
 
                     process.Start();
                     process.BeginOutputReadLine();
