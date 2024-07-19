@@ -47,6 +47,23 @@ namespace tNavigatorLauncher
         {
             try
             {
+                // Проверка, запущен ли уже такой процесс
+                var existingProcesses = Process.GetProcessesByName(Path.GetFileNameWithoutExtension(launcherConfig.TNavigatorConsoleExePath));
+                foreach (var existingProcess in existingProcesses)
+                {
+                    try
+                    {
+                        existingProcess.Kill();
+                        existingProcess.WaitForExit();
+                        Console.WriteLine($"Завершён предыдущий процесс: {existingProcess.ProcessName} {existingProcess.Id}");
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Ошибка при завершении процесса: {ex.Message}");
+                    }
+                }
+
                 lock (LockObject)
                 {
                     using Process process = new()
