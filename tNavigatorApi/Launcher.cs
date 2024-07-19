@@ -85,6 +85,7 @@ namespace tNavigatorLauncher
                          if (!string.IsNullOrEmpty(e.Data))
                          {
                             Console.SetCursorPosition(cursorPosition.Left, cursorPosition.Top);
+                            Console.Write(new string(' ', Console.WindowWidth));
                             Console.WriteLine(e.Data);
                         }
                     });
@@ -97,7 +98,7 @@ namespace tNavigatorLauncher
 
                 //if (!string.IsNullOrEmpty(Output))
                 //    Console.WriteLine(Output.TakeLast(5000));
-                Console.WriteLine("Finish calculate");
+                Console.WriteLine("Finish calculate\n\n\n\n\n\n\n\n\n");
             }
             catch (Exception ex)
             {
