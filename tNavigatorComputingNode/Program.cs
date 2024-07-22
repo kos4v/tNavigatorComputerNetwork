@@ -64,9 +64,9 @@ public class Program
                 TeamName = project.Team.Name
             };
 
-            
             try
             {
+                Attempt(() => SendResult(project.ResultAddress, "Calculation"));
                 launcherConfig = new LauncherConfig(config.TNavPath, config.ProjectDirPath, project.ConverterAddress);
                 var launcher = new Launcher(launcherConfig, project);
                 var resultTask = Task.Run(launcher.Start);
