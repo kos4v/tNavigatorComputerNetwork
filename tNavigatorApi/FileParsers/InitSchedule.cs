@@ -19,8 +19,7 @@ public partial class NavigatorFileController
             "'WELLS=2' 'SUMMARY=2' 'fip=3' 'RESTART=1' 'WELSPECS' 'CPU=2' /",
             "",
             "INCLUDE\r\n'INCLUDE/DynamicModel_VFP.inc' /",
-            "INCLUDE",
-            $"'INCLUDE/{Path.GetFileName(launcherConfig.WellTrackPath)}' /",
+            $"INCLUDE\r\n'INCLUDE/{Path.GetFileName(launcherConfig.WellTrackPath)}' /",
             "",
             "WELSPECS",
             ..project.Boreholes.Select(b => b.TNavString()),
@@ -47,7 +46,6 @@ public partial class NavigatorFileController
             Add(Schedule.DateTNavString(i));
             if (todayEvents is null)
                 continue;
-
 
             // Schedule.GetEventPriority позволяет объявить перфорации до взаимодействия с ними
             // Так же указывает прочий порядок добавление событий

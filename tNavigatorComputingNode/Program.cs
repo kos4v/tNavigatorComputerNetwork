@@ -28,6 +28,7 @@ public class Program
         const string yaroslav = "W10532";
         const string kos4v = "W10954";
 
+        return;
         //switch (host)
         //{
         //    case vasya:
