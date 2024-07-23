@@ -31,6 +31,7 @@ public class Program
         {
             case vasya:
             case yaroslav:
+            case bobSafronov:
                 return;
         }
 
