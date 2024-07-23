@@ -27,9 +27,10 @@ public class Program
         const string yaroslav = "W10532";
         const string kos4v = "W10954";
 
+        return;
         string configPath = host switch
         {
-            kos4v => "config.Development.json",
+            //kos4v => "config.Development.json",
             //yaroslav => "config.BobSafronov.json",
             //bobSafronov => "config.Development.json",
             _ => "config.json"
