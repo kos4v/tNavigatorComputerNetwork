@@ -27,13 +27,14 @@ public class Program
         const string vasya = "W09975";
         const string yaroslav = "W10532";
         const string kos4v = "W10954";
-        switch (host)
-        {
-            case vasya:
-            case yaroslav:
-            case bobSafronov:
-                return;
-        }
+
+        //switch (host)
+        //{
+        //    case vasya:
+        //    case yaroslav:
+        //    case bobSafronov:
+        //        return;
+        //}
 
         string configPath = host switch
         {
