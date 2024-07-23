@@ -32,7 +32,8 @@ namespace tNavigatorModels.Project.Schedule.Events
         public string TNavString() => string.Join("\t", [
             TemplateName,
             "ON",
-            "'ARITHMETIC_ONE'"
+            "'ARITHMETIC_ONE'",
+            "/"
             ]);
 
         public string InitTemplateString() =>
