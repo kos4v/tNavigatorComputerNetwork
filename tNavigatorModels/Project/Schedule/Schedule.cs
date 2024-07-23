@@ -15,7 +15,8 @@ namespace tNavigatorModels.Project.Schedule
             };
         }
 
-        public static DateOnly StartDate => new(2024, 1, 1);
+        public static DateOnly StartDate => new(2024, 7, 24);
+
         public int CurrentStep { get; set; }
         public EventSchedule Events { get; set; }
         public static string ResultRootPythonVariable => "root_result_dir";

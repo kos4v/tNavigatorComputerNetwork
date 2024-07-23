@@ -24,13 +24,21 @@ public class Program
         var host = Dns.GetHostName();
 
         const string bobSafronov = "W09531";
+        const string vasya = "W09975";
         const string yaroslav = "W10532";
         const string kos4v = "W10954";
 
-        //return;
+        //switch (host)
+        //{
+        //    case vasya:
+        //    case yaroslav:
+        //    case bobSafronov:
+        //        return;
+        //}
+
         string configPath = host switch
         {
-            //kos4v => "config.Development.json",
+            kos4v => "config.Development.json",
             //yaroslav => "config.BobSafronov.json",
             //bobSafronov => "config.Development.json",
             _ => "config.json"
