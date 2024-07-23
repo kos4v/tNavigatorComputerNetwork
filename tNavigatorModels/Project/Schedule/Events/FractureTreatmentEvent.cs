@@ -48,7 +48,8 @@ namespace tNavigatorModels.Project.Schedule.Events
                 Params.H1,
                 Params.H2,
                 Params.FZ,
-                Params.NFZ
+                Params.NFZ,
+                "/"
                 ]);
 
         public static string InitEventString(IEnumerable<FractureTreatmentEvent> events) =>

@@ -24,6 +24,7 @@ public partial class NavigatorFileController
             "WELSPECS",
             ..project.Boreholes.Select(b => b.TNavString()),
             "/",
+            FractureTreatmentEvent.InitEventString(project.Schedule.Events.FractureTreatmentEvents),
             "",
             Schedule.ScriptsTNavString(launcherConfig.ScriptDirPath, launcherConfig.ResultDirPath, scriptStartStep)
         ]);
