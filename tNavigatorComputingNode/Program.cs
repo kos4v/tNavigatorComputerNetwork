@@ -112,15 +112,22 @@ public class Program
 
         bool CaseIsLive(string url)
         {
-            using var client = new HttpClient();
-            using var response = client.GetAsync($"{url}&onlyStatus=true").Result;
+            try
+            {
+                using var client = new HttpClient();
+                using var response = client.GetAsync($"{url}&onlyStatus=true").Result;
 
-            var res = response.Content.ReadAsStringAsync().Result;
+                var res = response.Content.ReadAsStringAsync().Result;
 
-            //Log.Write($"Response: {response.StatusCode}, id: {res}");
-            string responseContent = response.Content.ReadAsStringAsync().Result;
-            var result = !responseContent.ToLower().Contains("cancel");
-            return result;
+                //Log.Write($"Response: {response.StatusCode}, id: {res}");
+                string responseContent = response.Content.ReadAsStringAsync().Result;
+                var result = !responseContent.ToLower().Contains("cancel");
+                return result;
+            }
+            catch (Exception e) {
+                Log.Write($"{e.Message}\n{e}");
+                return true;
+            }
         }
 
         // status: OilCaseX.Model.Calculation.EnumCalculationStatus
