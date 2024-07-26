@@ -155,19 +155,37 @@ public class ModelResult
     {
         if (!CalculationResult.ContainsKey($"{EnumPointKeys.FOPR}"))
             return [];
-
         var result = CalculationResult[$"{EnumPointKeys.FOPR}"].Keys.Select(g =>
             new MultiValuePoint(
                 g,
-                CalculationResult[$"{EnumPointKeys.FVPR}"][g],
+                //CalculationResult[$"{EnumPointKeys.FVPR}"][g],
+                //UpMax(CalculationResult[$"{EnumPointKeys.FVPR}"][g], 1200),
+               CalculationResult.Keys.Where(k => k.Contains($"{EnumPointKeys.WLPR}:"))
+                    .Sum(k => limit(CalculationResult[k][g], 900)),
+
                 CalculationResult[$"{EnumPointKeys.FWPR}"][g],
-                CalculationResult[$"{EnumPointKeys.FOPR}"][g],
-                CalculationResult[$"{EnumPointKeys.FGPR}"][g],
-                CalculationResult[$"{EnumPointKeys.FCPR}"][g],
+                //CalculationResult[$"{EnumPointKeys.FOPR}"][g],
+                //UpMax(CalculationResult[$"{EnumPointKeys.FOPR}"][g], 450),
+                CalculationResult.Keys.Where(k => k.Contains($"{EnumPointKeys.WOPR}:"))
+                    .Sum(k => limit(CalculationResult[k][g], 450)),
+
+                //UpMax(CalculationResult[$"{EnumPointKeys.FGPR}"][g], 300),
+                CalculationResult.Keys.Where(k => k.Contains($"{EnumPointKeys.WGPR}:"))
+                    .Sum(k => limit(CalculationResult[k][g], 300)),
+
+                //CalculationResult[$"{EnumPointKeys.FCPR}"][g],
+                CalculationResult.Keys.Where(k => k.Contains($"{EnumPointKeys.WCPR}:"))
+                    .Sum(k => limit(CalculationResult[k][g], 450)),
                 0,
                 0
             )).ToArray();
         return result;
+
+        double limit(double value, double upLimit) 
+        {
+            var result = Math.Min(value, upLimit);
+            return result;
+        }
     }
 
     /// <summary>Возврщает значение всех дебитов с точностью в день. По скважине</summary>
@@ -185,15 +203,25 @@ public class ModelResult
             .Select(g =>
                 new MultiValuePoint(
                     g,
-                    boreholeParamsHistory[$"{EnumPointKeys.WLPR}"][g],
+                    //boreholeParamsHistory[$"{EnumPointKeys.WLPR}"][g],
+                    UpMax(boreholeParamsHistory[$"{EnumPointKeys.WLPR}"][g], 900),
                     boreholeParamsHistory[$"{EnumPointKeys.WWPR}"][g],
-                    boreholeParamsHistory[$"{EnumPointKeys.WOPR}"][g],
-                    boreholeParamsHistory[$"{EnumPointKeys.WGPR}"][g],
-                    boreholeParamsHistory[$"{EnumPointKeys.WCPR}"][g],
+                    //boreholeParamsHistory[$"{EnumPointKeys.WOPR}"][g],
+                    UpMax(boreholeParamsHistory[$"{EnumPointKeys.WOPR}"][g], 450),
+                    UpMax(boreholeParamsHistory[$"{EnumPointKeys.WGPR}"][g], 300),
+                    UpMax(boreholeParamsHistory[$"{EnumPointKeys.WCPR}"][g], 450),
+                    //boreholeParamsHistory[$"{EnumPointKeys.WCPR}"][g],
                     boreholeParamsHistory[$"{EnumPointKeys.WBHP}"][g],
                     boreholeParamsHistory[$"{EnumPointKeys.WTHP}"][g]
                 )
             ).ToArray();
+
         return result;
+
+        double UpMax(double value, double upLimit)
+        {
+            var result = Math.Min(value, upLimit);
+            return result;
+        }
     }
 }
