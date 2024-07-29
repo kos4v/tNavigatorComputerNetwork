@@ -24,14 +24,12 @@ public class Program
         var host = Dns.GetHostName();
 
         const string bobSafronov = "W09531";
-        const string vasya = "W09975";
         const string yaroslav = "W10532";
         const string kos4v = "W10954";
 
         //return;
         //switch (host)
         //{
-        //    case vasya:
         //    case yaroslav:
         //    case bobSafronov:
         //        return;

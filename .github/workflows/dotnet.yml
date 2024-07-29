@@ -13,8 +13,8 @@ jobs:
     strategy:
         fail-fast: true
         matrix: 
-            # os: [main, W10532, W09975]
-            os: [main, W10532, W09975]
+            # os: [main, W10532]
+            os: [main, W10532]
 
     runs-on: ${{matrix.os}}
 
