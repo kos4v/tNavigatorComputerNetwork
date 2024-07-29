@@ -47,6 +47,7 @@ jobs:
       run: xcopy /E /I /Y .\out  C:\tNavNodeOilCase
 
     - name: Start tNavigatorComputingNode.exe
+      shell: cmd
       run: |
         cd C:\tNavNodeOilCase
         schtasks /run /tn tnav_node_oilcase
