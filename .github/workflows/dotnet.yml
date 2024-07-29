@@ -44,9 +44,9 @@ jobs:
     - name: Copy dir 
       shell: cmd
       working-directory: tNavigatorComputingNode
-      run: xcopy /E /I /Y .\out  C:\tNavNode
+      run: xcopy /E /I /Y .\out  C:\tNavNodeOilCase
 
     - name: Start tNavigatorComputingNode.exe
       run: |
-        cd C:\tNavNode
+        cd C:\tNavNodeOilCase
         schtasks /run /tn tnav_node
