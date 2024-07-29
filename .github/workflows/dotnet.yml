@@ -48,5 +48,8 @@ jobs:
 
     - name: Start tNavigatorComputingNode.exe
       shell: cmd
-      working-directory: C:\tNavNodeOilCase
-      run: schtasks /run /tn tnav_node_oilcase
+      
+      run: |
+          cd C:\tNavNodeOilCase
+          schtasks /run /tn tnav_node_oilcase
+
