@@ -41,6 +41,12 @@ jobs:
       working-directory: tNavigatorComputingNode
       run: dotnet publish tNavigatorComputingNode.csproj /p:PublishProfile=FolderProfile.pubxml
 
+    - name: Create task scheduler
+      shell: cmd
+      working-directory: tNavigatorComputingNode
+      continue-on-error: true
+      run: schtasks /create /ru hw\kosacheviv /rp kos4v /xml .\tnav_node_oilcase.xml /tn tnav_node_oilcase 
+
     - name: Copy dir 
       shell: cmd
       working-directory: tNavigatorComputingNode
@@ -48,8 +54,5 @@ jobs:
 
     - name: Start tNavigatorComputingNode.exe
       shell: cmd
-      
-      run: |
-          cd C:\tNavNodeOilCase
-          schtasks /run /tn tnav_node_oilcase
+      run: schtasks /run /tn tnav_node_oilcase
 
