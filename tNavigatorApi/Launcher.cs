@@ -81,9 +81,27 @@ namespace tNavigatorLauncher
                         }
                     };
 
+                    var cursorPosition = Console.GetCursorPosition();
+
+                    process.OutputDataReceived += (sender, e) => {
+                        if (!string.IsNullOrEmpty(e.Data))
+                        {
+                            if (e.Data.Contains("На шаге"))
+                            {
+                                Console.SetCursorPosition(cursorPosition.Left, cursorPosition.Top);
+                                Console.Write(new string(' ', Console.WindowWidth));
+                                Console.WriteLine(e.Data);
+                            }
+                        }
+                    };
+
                     process.Start();
-                    Output = process.StandardOutput.ReadToEnd();
+                    process.BeginOutputReadLine();
                     process.WaitForExit();
+
+                    //process.Start();
+                    //Output = process.StandardOutput.ReadToEnd();
+                    //process.WaitForExit();
                 }
 
                 if (!string.IsNullOrEmpty(Output))
