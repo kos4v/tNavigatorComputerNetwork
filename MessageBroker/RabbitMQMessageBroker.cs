@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Text;
+using System.Threading.Channels;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -40,7 +41,10 @@ public class RabbitMQMessageBroker(
         HostName = hostname,
         CredentialsProvider = !string.IsNullOrEmpty(user) & !string.IsNullOrEmpty(password)
             ? new BasicCredentialsProvider(user, password)
-            : null
+            : null,
+        NetworkRecoveryInterval = TimeSpan.FromSeconds(10),
+        RequestedHeartbeat = TimeSpan.FromSeconds(60),
+        AutomaticRecoveryEnabled = true
     };
 
 
@@ -86,6 +90,15 @@ public class RabbitMQMessageBroker(
             using var connection = MakeFactory().CreateConnection();
             using var channel = connection.CreateModel();
 
+            //var properties = channel.CreateBasicProperties();
+
+            //// one day
+            //var ttlMilliseconds = 24 * 60 * 60 * 1000;
+            //properties.Headers = new Dictionary<string, object>
+            //{
+            //    // Время жизни сообщения. После исчерпания временного лимита сообщени удаляется из очереди.
+            //    { "x-message-ttl", ttlMilliseconds }
+            //};
 
             var rabbitQueue = channel.QueueDeclare(queue: QueueName,
                 durable: true,
@@ -101,6 +114,7 @@ public class RabbitMQMessageBroker(
                     channel.BasicPublish(exchange: "",
                         routingKey: QueueName,
                         basicProperties: null,
+                        //basicProperties: properties,
                         body: stackMessage);
                 }
                 else

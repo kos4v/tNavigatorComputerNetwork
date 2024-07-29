@@ -37,7 +37,7 @@ namespace tNavigatorModels.Project.Schedule.Events
             ]);
 
         public string InitTemplateString() =>
-            string.Join("\n", [
+            string.Join("\t", [
                 $"'{BoreholeName}'",
                 "*",
                 TemplateName,
