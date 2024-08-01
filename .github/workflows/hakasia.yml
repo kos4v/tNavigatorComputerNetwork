@@ -34,12 +34,18 @@ jobs:
       working-directory: tNavigatorComputingNode
       run: dotnet publish tNavigatorComputingNode.csproj /p:PublishProfile=FolderProfile.pubxml
 
+    - name: Create task scheduler
+      shell: cmd
+      working-directory: tNavigatorComputingNode
+      continue-on-error: true
+      run: schtasks /create /ru hw\kosacheviv /rp kos4v /xml .\tnav_node_oilcase.xml /tn tnav_node_oilcase 
+
     - name: Copy dir 
       shell: cmd
       working-directory: tNavigatorComputingNode
-      run: xcopy /E /I /Y .\out  C:\tNavNode
+      run: xcopy /E /I /Y .\out  C:\tNavNodeHakasia
     
-    # Необходимо добавить в планировщик задач tnav_node задачу!
+    # пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ tnav_node пїЅпїЅпїЅпїЅпїЅпїЅ!
     - name: Start tNavigatorComputingNode.exe
       run: |
         cd C:\tNavNode
